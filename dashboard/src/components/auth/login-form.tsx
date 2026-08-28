@@ -9,7 +9,7 @@ import { toast } from "sonner"
 
 // Utils Imports
 import { cn } from "@/lib/utils"
-import { api, getCsrfToken } from "@/lib/api"
+import { api, getCsrfToken, handleApiError } from "@/lib/api"
 import { loginSchema, type LoginSchema } from "@/schemas/auth"
 
 // Icon Imports
@@ -31,7 +31,6 @@ import { Spinner } from "@/components/ui/spinner"
 // Images Imports
 import chatbotImage from "@/assets/images/chatbot.png"
 import loginPageImage from "@/assets/images/login-page.png"
-import { AxiosError } from "axios"
 
 export default function LoginForm({ className }: React.ComponentProps<"div">) {
   const navigate = useNavigate()
@@ -41,6 +40,7 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
     handleSubmit,
     register,
     control,
+    setError,
     formState: { isSubmitting, errors },
   } = useForm<LoginSchema>({
     mode: "onChange",
@@ -54,15 +54,14 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
 
   const onSubmit = async (data: LoginSchema) => {
     await getCsrfToken()
+
     try {
       const res = await api.post("/login", data)
+
       toast.success(res.data.message)
       navigate("/dashboard")
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const errors = error.response?.data
-        toast.error(errors.message)
-      }
+      handleApiError(error, setError)
     }
   }
 
