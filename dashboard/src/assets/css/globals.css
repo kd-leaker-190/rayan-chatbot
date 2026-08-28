@@ -1,0 +1,274 @@
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./vazirmatn-font.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Fonts */
+  --font-heading: var(--font-vazir);
+  --font-vazir: "Vazirmatn", sans-serif;
+
+  /* Base */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Card */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  /* Popover */
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* Brand */
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-soft: var(--brand-soft);
+
+  /* Primary */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  /* Secondary */
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  /* Muted */
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  /* Accent */
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  /* Status */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  /* UI */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* 
+=========================================================
+  RAYAN CHAT — LIGHT THEME
+========================================================= 
+*/
+
+:root {
+  /* Brand */
+  --brand: #09c82c;
+  --brand-hover: #08b727;
+  --brand-dark: #079b23;
+  --brand-soft: #e8fbe9;
+
+  /* Background */
+  --background: #f8faf8;
+  --foreground: #101610;
+
+  /* Cards */
+  --card: #ffffff;
+  --card-foreground: #101610;
+
+  /* Popovers */
+  --popover: #ffffff;
+  --popover-foreground: #101610;
+
+  /* Primary */
+  --primary: #09c82c;
+  --primary-foreground: #ffffff;
+
+  /* Secondary */
+  --secondary: #edf5ee;
+  --secondary-foreground: #19301d;
+
+  /* Muted */
+  --muted: #f0f4f0;
+  --muted-foreground: #667066;
+
+  /* Accent */
+  --accent: #e8fbe9;
+  --accent-foreground: #08751f;
+
+  /* Status */
+  --success: #16a34a;
+  --success-foreground: #ffffff;
+
+  --warning: #f59e0b;
+  --warning-foreground: #1c1300;
+
+  --info: #0ea5e9;
+  --info-foreground: #ffffff;
+
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  /* Borders / Inputs */
+  --border: #e1e8e2;
+  --input: #d8e2da;
+  --ring: #09c82c;
+
+  /* Charts */
+  --chart-1: #09c82c;
+  --chart-2: #0ea765;
+  --chart-3: #16a34a;
+  --chart-4: #65a30d;
+  --chart-5: #14b8a6;
+
+  /* Radius */
+  --radius: 0.75rem;
+
+  /* Sidebar */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #101610;
+  --sidebar-primary: #09c82c;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e8fbe9;
+  --sidebar-accent-foreground: #08751f;
+  --sidebar-border: #e1e8e2;
+  --sidebar-ring: #09c82c;
+}
+
+/* =========================================================
+   RAYAN CHAT — DARK THEME
+   ========================================================= */
+
+.dark {
+  /* Brand */
+  --brand: #09c82c;
+  --brand-hover: #19d63a;
+  --brand-dark: #079b23;
+  --brand-soft: #0d2f16;
+
+  /* Background */
+  --background: #0a0f0b;
+  --foreground: #f1f5f1;
+
+  /* Cards */
+  --card: #101711;
+  --card-foreground: #f1f5f1;
+
+  /* Popovers */
+  --popover: #101711;
+  --popover-foreground: #f1f5f1;
+
+  /* Primary */
+  --primary: #09c82c;
+  --primary-foreground: #031006;
+
+  /* Secondary */
+  --secondary: #18211a;
+  --secondary-foreground: #e5ebe6;
+
+  /* Muted */
+  --muted: #151d16;
+  --muted-foreground: #8b978d;
+
+  /* Accent */
+  --accent: #0d2f16;
+  --accent-foreground: #55e86c;
+
+  /* Status */
+  --success: #22c55e;
+  --success-foreground: #031006;
+
+  --warning: #fbbf24;
+  --warning-foreground: #1a1200;
+
+  --info: #38bdf8;
+  --info-foreground: #031014;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  /* Borders / Inputs */
+  --border: #202b22;
+  --input: #263228;
+  --ring: #09c82c;
+
+  /* Charts */
+  --chart-1: #09c82c;
+  --chart-2: #14b866;
+  --chart-3: #22c55e;
+  --chart-4: #84cc16;
+  --chart-5: #2dd4bf;
+
+  /* Sidebar */
+  --sidebar: #0d130e;
+  --sidebar-foreground: #f1f5f1;
+  --sidebar-primary: #09c82c;
+  --sidebar-primary-foreground: #031006;
+  --sidebar-accent: #142219;
+  --sidebar-accent-foreground: #55e86c;
+  --sidebar-border: #202b22;
+  --sidebar-ring: #09c82c;
+}
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-vazir;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground;
+  }
+
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: var(--brand);
+    color: #ffffff;
+  }
+}
