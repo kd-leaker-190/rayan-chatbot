@@ -17,4 +17,8 @@ return [
     'password' => 'رمز عبور وارد شده نادرست است.',
     'throttle' => 'تعداد دفعات تلاش برای ورود بیش از حد مجاز است. لطفاً پس از :seconds ثانیه دوباره تلاش کنید.',
 
+    'registered_successfully' => 'ثبت نام با موفقیت انجام شد.',
+    'login_successfully' => 'ورود با موفقیت انجام شد.',
+    'logout_successfully' => 'خروج با موفقیت انجام شد.',
+    'verification_email_link_sent_successfully' => 'یک ایمیل حاوی لینک تایید برای شما ارسال شد.'
 ];

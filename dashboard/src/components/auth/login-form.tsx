@@ -1,61 +1,189 @@
-// Package Imports
-import { Link } from "react-router-dom"
+// React Imports
+import { useState } from "react"
 
-// Util Imports
+// Package Imports
+import { Link, useNavigate } from "react-router-dom"
+import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { toast } from "sonner"
+
+// Utils Imports
 import { cn } from "@/lib/utils"
+import { api, getCsrfToken } from "@/lib/api"
+import { loginSchema, type LoginSchema } from "@/schemas/auth"
+
+// Icon Imports
+import { Eye, EyeOff } from "lucide-react"
 
 // Shadcn Components Imports
 import { Card, CardContent } from "@/components/ui/card"
-import { FieldDescription, FieldGroup } from "@/components/ui/field"
-
-// Custom Component Imports
-import CustomInput from "@/components/shared/forms/custom-input"
-import VisiblePasswordInput from "@/components/shared/forms/visible-password-input"
-import CustomCheckbox from "@/components/shared/forms/custom-checkbox"
-import CustomSubmitButton from "@/components/shared/forms/custom-submit-button"
-import RayanLoginTitle from "@/components/auth/rayan-login-title"
-import LoginWelocmeText from "@/components/auth/login-welcome-text"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 
 // Images Imports
+import chatbotImage from "@/assets/images/chatbot.png"
 import loginPageImage from "@/assets/images/login-page.png"
+import { AxiosError } from "axios"
 
-export default function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export default function LoginForm({ className }: React.ComponentProps<"div">) {
+  const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { isSubmitting, errors },
+  } = useForm<LoginSchema>({
+    mode: "onChange",
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      remember: false,
+    },
+  })
+
+  const onSubmit = async (data: LoginSchema) => {
+    await getCsrfToken()
+    try {
+      const res = await api.post("/login", data)
+      toast.success(res.data.message)
+      navigate("/dashboard")
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errors = error.response?.data
+        toast.error(errors.message)
+      }
+    }
+  }
+
   return (
     <div
       className={cn(
         "flex min-h-screen w-full items-center justify-center p-4 sm:p-6",
         className
       )}
-      {...props}
     >
       <div className="w-full max-w-270">
         <Card className="overflow-hidden rounded-[24px] border border-gray-200 bg-white p-0 shadow-[0_8px_25px_rgba(0,0,0,0.12)]">
           <CardContent className="flex min-h-0 flex-col-reverse p-0 md:min-h-157.5 md:flex-row">
-            <form className="flex w-full flex-col justify-center bg-white px-6 py-8 sm:px-10 md:w-1/2 md:px-12 lg:px-14">
-              <RayanLoginTitle />
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex w-full flex-col justify-center bg-white px-6 py-8 sm:px-10 md:w-1/2 md:px-12 lg:px-14"
+            >
+              <div className="mb-8 flex items-center justify-center gap-2 md:justify-start">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 p-1.5">
+                  <img
+                    src={chatbotImage}
+                    alt="آیکون رایان چت"
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+
+                <h1 className="text-2xl font-bold text-gray-900">رایان چت</h1>
+              </div>
 
               <FieldGroup className="gap-5">
-                <LoginWelocmeText />
+                <div className="mb-2 flex flex-col items-start gap-1 text-right">
+                  <h2 className="text-xl font-bold text-gray-900">
+                    خوش آمدید 👋
+                  </h2>
+                  <p className="text-sm leading-6 text-muted-foreground">
+                    وارد حساب کاربری خود شوید و مدیریت چت‌ها را شروع کنید.
+                  </p>
+                </div>
 
-                <CustomInput
-                  label="ایمیل"
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  dir="ltr"
-                />
+                <Field>
+                  <FieldLabel htmlFor="email">ایمیل</FieldLabel>
 
-                <VisiblePasswordInput
-                  label="رمزعبور"
-                  name="password"
-                  placeholder="رمزعبور خود را وارد کنید."
-                />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    className={cn("py-5")}
+                    dir="ltr"
+                    {...register("email")}
+                  />
+
+                  {errors.email && (
+                    <FieldDescription
+                      className={cn("text-red-500", "text-sm", "text-right")}
+                    >
+                      {errors.email.message}
+                    </FieldDescription>
+                  )}
+                </Field>
+
+                <Field>
+                  <FieldLabel htmlFor="password">رمزعبور</FieldLabel>
+
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="رمزعبور خود را وارد کنید."
+                      className={cn("py-5")}
+                      {...register("password")}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-emerald-600"
+                      aria-label={
+                        showPassword ? "مخفی کردن رمزعبور" : "نمایش رمزعبور"
+                      }
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+
+                  {errors.password && (
+                    <FieldDescription
+                      className={cn("text-red-500", "text-sm", "text-right")}
+                    >
+                      {errors.password.message}
+                    </FieldDescription>
+                  )}
+                </Field>
 
                 <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
-                  <CustomCheckbox label="من را بخاطر بسپار" name="remember" />
+                  <div className={cn("flex", "items-center", "gap-2")}>
+                    <Controller
+                      name="remember"
+                      control={control}
+                      render={({ field }) => (
+                        <>
+                          <Checkbox
+                            id="remember"
+                            name="remember"
+                            className={cn("rounded")}
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                          <FieldLabel
+                            htmlFor="remember"
+                            className={cn("cursor-pointer", "text-sm")}
+                          >
+                            من را بخاطر بسپار
+                          </FieldLabel>
+                        </>
+                      )}
+                    />
+                  </div>
 
                   <Link
                     to="/forgot-password"
@@ -65,7 +193,27 @@ export default function LoginForm({
                   </Link>
                 </div>
 
-                <CustomSubmitButton title="ورود به حساب کاربری" />
+                <Button
+                  type="submit"
+                  size="lg"
+                  className={cn(
+                    "h-12",
+                    "w-full",
+                    "rounded-lg",
+                    "bg-brand",
+                    "text-base"
+                  )}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      ورود به حساب کاربری
+                      <Spinner />
+                    </span>
+                  ) : (
+                    <span>ورود به حساب کاربری</span>
+                  )}
+                </Button>
 
                 <FieldDescription className="pt-1 text-center text-sm">
                   حساب کاربری ندارید؟{" "}
@@ -91,7 +239,7 @@ export default function LoginForm({
 
         <p className="mt-5 text-center text-xs leading-6 text-muted-foreground">
           با ورود به سایت، شما با{" "}
-          <Link to="/privacy" className="underline text-brand">
+          <Link to="/privacy" className="text-brand underline">
             سیاست حریم خصوصی
           </Link>{" "}
           ما موافقت می‌کنید.
