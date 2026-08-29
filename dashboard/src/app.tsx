@@ -9,10 +9,12 @@ import GuestLayout from "@/components/layouts/guest-layout"
 import VerifyEmailLayout from "@/components/layouts/verify-email-layout"
 
 // Pages
-import Login from "@/pages/login"
+import Login from "@/pages/auth/login"
 import Dashboard from "@/pages/dashboard"
-import Register from "@/pages/register"
-import VerifyEmail from "@/pages/verify-email"
+import Register from "@/pages/auth/register"
+import VerifyEmail from "@/pages/dashboard/verify-email"
+import ForgotPassword from "@/pages/auth/forgot-password"
+import PasswordReset from "@/pages/auth/password-reset"
 
 export function App() {
   const { theme } = useTheme()
@@ -23,6 +25,8 @@ export function App() {
         <Route element={<GuestLayout />}>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/password-reset/:token" element={<PasswordReset />} />
         </Route>
 
         <Route element={<ProtectedLayout />}>
