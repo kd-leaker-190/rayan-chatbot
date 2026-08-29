@@ -42,4 +42,11 @@ class AuthenticatedSessionController extends Controller
             message: __('auth.logout_successfully'),
         );
     }
+
+    public function getUser(Request $request): JsonResponse
+    {
+        return ApiResponse::success(
+            data: new UserResource($request->user())
+        );
+    }
 }

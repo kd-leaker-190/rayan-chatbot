@@ -162,7 +162,7 @@ return [
     'starts_with' => 'فیلد :attribute باید با یکی از موارد زیر شروع شود: :values.',
     'string' => 'فیلد :attribute باید یک رشته باشد.',
     'timezone' => 'فیلد :attribute باید یک منطقه زمانی معتبر باشد.',
-    'unique' => ':attribute قبلاً گرفته شده است.',
+    'unique' => ':attribute قبلاً انتخاب شده است.',
     'uploaded' => 'آپلود فیلد :attribute با شکست مواجه شد.',
     'uppercase' => 'فیلد :attribute باید حروف بزرگ باشد.',
     'url' => 'فیلد :attribute باید یک آدرس URL معتبر باشد.',
@@ -197,6 +197,17 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'username' => 'نام کاربری',
+        'email' => 'ایمیل',
+        'email_verified_at' => 'تاریخ تایید ایمیل',
+        'password' => 'رمزعبور',
+        'password_confirmation' => 'تکرار رمزعبور',
+        'first_name' => 'نام',
+        'last_name' => 'نام خانوادگی',
+        'phone' => 'شماره موبایل',
+        'phone_verified_at' => 'تاریخ تایید شماره تلفن',
+        'avatar' => 'تصویر پروفایل',
+    ],
 
 ];

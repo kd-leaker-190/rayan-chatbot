@@ -9,8 +9,9 @@ import { toast } from "sonner"
 
 // Utils Imports
 import { cn } from "@/lib/utils"
-import { api, getCsrfToken, handleApiError } from "@/lib/api"
+import { api, handleApiError } from "@/lib/api"
 import { loginSchema, type LoginSchema } from "@/schemas/auth"
+import { useAuth } from "@/hooks/use-auth"
 
 // Icon Imports
 import { Eye, EyeOff } from "lucide-react"
@@ -35,6 +36,7 @@ import loginPageImage from "@/assets/images/login-page.png"
 export default function LoginForm({ className }: React.ComponentProps<"div">) {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
+  const { mutate } = useAuth()
 
   const {
     handleSubmit,
@@ -53,12 +55,11 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
   })
 
   const onSubmit = async (data: LoginSchema) => {
-    await getCsrfToken()
-
     try {
       const res = await api.post("/login", data)
 
       toast.success(res.data.message)
+      mutate(res.data.data)
       navigate("/dashboard")
     } catch (error) {
       handleApiError(error, setError)

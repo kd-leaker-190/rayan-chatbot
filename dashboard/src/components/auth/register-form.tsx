@@ -9,8 +9,9 @@ import { toast } from "sonner"
 
 // Utils Imports
 import { cn } from "@/lib/utils"
-import { api, getCsrfToken, handleApiError } from "@/lib/api"
+import { api, handleApiError } from "@/lib/api"
 import { registerSchema, type RegisterSchema } from "@/schemas/auth"
+import { useAuth } from "@/hooks/use-auth"
 
 // Icon Imports
 import { Eye, EyeOff } from "lucide-react"
@@ -42,6 +43,7 @@ export default function RegisterForm({
 }: React.ComponentProps<"div">) {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
+  const { mutate } = useAuth()
 
   const {
     handleSubmit,
@@ -60,12 +62,11 @@ export default function RegisterForm({
   })
 
   const onSubmit = async (data: RegisterSchema) => {
-    await getCsrfToken()
-
     try {
       const res = await api.post("/register", data)
 
       toast.success(res.data.message)
+      mutate(res.data.data)
       navigate("/dashboard")
     } catch (error) {
       handleApiError(error, setError)
