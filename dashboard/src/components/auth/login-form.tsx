@@ -235,14 +235,6 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
             </div>
           </CardContent>
         </Card>
-
-        <p className="mt-5 text-center text-xs leading-6 text-muted-foreground">
-          با ورود به سایت، شما با{" "}
-          <Link to="/privacy" className="text-brand underline">
-            سیاست حریم خصوصی
-          </Link>{" "}
-          ما موافقت می‌کنید.
-        </p>
       </div>
     </div>
   )

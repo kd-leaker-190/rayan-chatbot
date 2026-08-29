@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/sonner"
 // Pages
 import Login from "@/pages/login"
 import Dashboard from "@/pages/dashboard"
-
+import Register from "@/pages/register"
 
 export function App() {
   const { theme } = useTheme()
@@ -14,6 +14,7 @@ export function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
