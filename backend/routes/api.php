@@ -1,12 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Api\V1\UserController;
 
 Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('user')->group(function () {
-            Route::get('/', [AuthenticatedSessionController::class, 'getUser']);
+            Route::get('/', [UserController::class, 'getUser']);
+            Route::put('/', [UserController::class, 'updateUser']);
         });
     });
 });
