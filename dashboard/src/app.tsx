@@ -7,7 +7,6 @@ import { Toaster } from "@/components/ui/sonner"
 import ProtectedLayout from "@/components/layouts/protected-layout"
 import GuestLayout from "@/components/layouts/guest-layout"
 import VerifyEmailLayout from "@/components/layouts/verify-email-layout"
-import DashboardLayout from "@/components/layouts/dashboard-layout"
 
 // Pages
 import Login from "@/pages/auth/login"
@@ -34,9 +33,7 @@ export function App() {
           <Route path="/dashboard/verify-email" element={<VerifyEmail />} />
 
           <Route element={<VerifyEmailLayout />}>
-            <Route element={<DashboardLayout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-            </Route>
+            <Route path="/dashboard" element={<Dashboard />} />
           </Route>
         </Route>
 
