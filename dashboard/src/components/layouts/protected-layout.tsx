@@ -11,7 +11,7 @@ export default function ProtectedLayout() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-muted">
         <Spinner className={cn("w-10", "h-10", "text-brand")} />
       </div>
     )

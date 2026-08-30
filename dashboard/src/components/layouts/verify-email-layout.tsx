@@ -8,5 +8,7 @@ export default function VerifyEmailLayout() {
     return <Navigate to="/dashboard/verify-email" replace />
   }
 
-  return <Outlet />
+  return (
+    <Outlet />
+  )
 }
