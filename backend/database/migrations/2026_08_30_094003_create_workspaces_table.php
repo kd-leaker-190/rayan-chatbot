@@ -11,19 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('operators', function (Blueprint $table) {
+        Schema::create('workspaces', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('workspace_id')->constrained('workspaces')->cascadeOnDelete();
-            $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
+            $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
 
-            $table->string('username');
-            $table->string('email');
-            $table->string('password');
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->text('bio')->nullable();
 
             $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
-
-            $table->unique(['workspace_id', 'email']);
 
             $table->timestamps();
         });
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('operators');
+        Schema::dropIfExists('workspaces');
     }
 };

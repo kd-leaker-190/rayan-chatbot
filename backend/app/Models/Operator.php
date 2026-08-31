@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
-    'user_id',
+    'workspace_id',
     'role_id',
-    'name',
+    'username',
     'email',
     'password',
 ])]
@@ -27,9 +27,9 @@ class Operator extends Model
         ];
     }
 
-    public function creator(): BelongsTo
+    public function workspace(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Workspace::class, 'workspace_id');
     }
 
     public function role(): BelongsTo

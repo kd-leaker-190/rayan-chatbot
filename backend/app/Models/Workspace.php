@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
+use App\Enums\WorkspaceStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
-    'workspace_id',
+    'owner_id',
     'name',
-    'label',
-    'description',
-    'is_system',
+    'slug',
+    'bio',
+    'status',
 ])]
-class Role extends Model
+class Workspace extends Model
 {
     /**
      * Get the attributes that should be cast.
@@ -24,17 +25,17 @@ class Role extends Model
     protected function casts(): array
     {
         return [
-            'is_system' => 'boolean',
+            'status' => WorkspaceStatus::class,
         ];
     }
 
-    public function permissions(): BelongsToMany
+    public function owner(): BelongsTo
     {
-        return $this->belongsToMany(Permission::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     public function operators(): HasMany
     {
-        return $this->hasMany(Operator::class);
+        return $this->hasMany(Workspace::class);
     }
 }

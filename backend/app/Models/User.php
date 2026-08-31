@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserStatus;
 use App\Mail\QueuedResetPasswordEmail;
 use App\Mail\QueuedVerifyEmail;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -24,6 +25,7 @@ use Illuminate\Notifications\Notifiable;
     'phone',
     'phone_verified_at',
     'avatar',
+    'status',
 ])]
 
 #[Hidden([
@@ -47,6 +49,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'phone_verified_at' => 'datetime',
             'password' => 'hashed',
+            'status' => UserStatus::class,
         ];
     }
 
@@ -58,6 +61,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new QueuedResetPasswordEmail($token));
+    }
+
+    public function ownedWorkspaces(): HasMany
+    {
+        return $this->hasMany(Workspace::class, 'owner_id');
     }
 
     public function operators(): HasMany

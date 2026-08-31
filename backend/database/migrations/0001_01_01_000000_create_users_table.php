@@ -29,6 +29,8 @@ return new class extends Migration
 
             $table->string('avatar')->nullable();
 
+            $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
+
             $table->rememberToken();
             $table->timestamps();
         });

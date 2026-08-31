@@ -24,7 +24,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('workspace_id')->constrained('users')->cascadeOnDelete();
 
             $table->string('name');
             $table->string('label');
@@ -32,7 +32,7 @@ return new class extends Migration
 
             $table->boolean('is_system')->default(false);
 
-            $table->unique(['user_id', 'name']);
+            $table->unique(['workspace_id', 'name']);
 
             $table->timestamps();
         });
