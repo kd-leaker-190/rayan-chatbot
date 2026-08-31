@@ -38,4 +38,9 @@ class Workspace extends Model
     {
         return $this->hasMany(Workspace::class);
     }
+
+    public function websites(): HasMany
+    {
+        return $this->hasMany(Website::class);
+    }
 }
