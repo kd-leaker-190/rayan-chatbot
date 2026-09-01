@@ -59,7 +59,7 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
       const res = await api.post("/login", data)
 
       toast.success(res.data.message)
-      mutate(res.data.data)
+      await mutate()
       navigate("/dashboard")
     } catch (error) {
       handleApiError(error, setError)

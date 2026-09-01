@@ -66,7 +66,7 @@ export default function RegisterForm({
       const res = await api.post("/register", data)
 
       toast.success(res.data.message)
-      mutate(res.data.data)
+      await mutate()
       navigate("/dashboard")
     } catch (error) {
       handleApiError(error, setError)
