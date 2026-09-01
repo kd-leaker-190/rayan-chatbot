@@ -23,13 +23,13 @@ class RegisteredUserController extends Controller
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'username' => ['required', 'string', 'lowercase', 'max:255','unique:users,username'],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
-            'username' => $request->username,
+            'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
         ]);

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class WorkspaceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,14 +17,11 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email,
-            'email_verified_at' => $this->email_verified_at?->format('Y-m-d H:i:s'),
-            'phone' => $this->phone,
-            'phone_verified_at' => $this->phone_verified_at?->format('Y-m-d H:i:s'),
-            'avatar' => url($this->avatar),
+            'bio' => $this->bio,
+            'status' => $this->status,
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
-            'ownedWorkspaces' => WorkspaceResource::collection($this->whenLoaded('ownedWorkspaces')),
+            'owner' => new UserResource($this->whenLoaded('owner')),
         ];
     }
 }

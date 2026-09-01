@@ -10,4 +10,5 @@ interface IUser {
   avatar?: string
   created_at: string
   updated_at: string
+  ownedWorkspaces?: IWorkspace[]
 }

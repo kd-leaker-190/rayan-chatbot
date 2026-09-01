@@ -1,4 +1,4 @@
-import { MessageSquare, LayoutDashboard, BotIcon, X } from "lucide-react"
+import { LayoutDashboard, BotIcon, X } from "lucide-react"
 
 import NavItem from "@/components/dashboard/nav-item"
 
@@ -42,11 +42,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             label="داشبورد"
             active
             link="/dashboard"
-          />
-          <NavItem
-            icon={<MessageSquare className="size-4" />}
-            label="مکالمه‌ها"
-            link="/dashboard/conversations"
           />
         </nav>
       </aside>

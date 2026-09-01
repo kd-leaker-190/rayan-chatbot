@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'owner_id',
     'name',
-    'slug',
     'bio',
     'status',
 ])]

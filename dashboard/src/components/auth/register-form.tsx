@@ -54,7 +54,7 @@ export default function RegisterForm({
     mode: "onChange",
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
       password_confirmation: "",
@@ -103,20 +103,19 @@ export default function RegisterForm({
           <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="username">نام کاربری</FieldLabel>
+                <FieldLabel htmlFor="name">نام و نام خانوادگی</FieldLabel>
                 <Input
-                  id="username"
+                  id="name"
                   type="text"
-                  placeholder="Rayan_123"
+                  placeholder="محمد ناصری"
                   className={cn("py-5")}
-                  dir="ltr"
-                  {...register("username")}
+                  {...register("name")}
                 />
-                {errors.username && (
+                {errors.name && (
                   <FieldDescription
                     className={cn("text-red-500", "text-sm", "text-right")}
                   >
-                    {errors.username.message}
+                    {errors.name.message}
                   </FieldDescription>
                 )}
               </Field>

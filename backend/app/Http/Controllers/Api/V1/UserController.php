@@ -14,23 +14,23 @@ use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
-    public function getUser(Request $request): JsonResponse
+    public function show(Request $request): JsonResponse
     {
+        $user = $request->user();
+        $user->load(['ownedWorkspaces']);
         return ApiResponse::success(
-            data: new UserResource($request->user())
+            data: new UserResource($user)
         );
     }
 
-    public function updateUser(Request $request): JsonResponse
+    public function update(Request $request): JsonResponse
     {
         $user = $request->user();
 
         $validator = Validator::make($request->all(), [
-            'username' => ['required', 'string', 'max:255', 'lowercase', Rule::unique('users', 'username')->ignore($request->user()->id)],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'lowercase', Rule::unique('users', 'email')->ignore($request->user()->id)],
             'password' => ['nullable', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
-            'first_name' => ['nullable', 'string', 'max:255'],
-            'last_name' => ['nullable', 'string', 'max:255'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,jpg,png']
         ]);
 

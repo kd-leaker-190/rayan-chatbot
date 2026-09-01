@@ -2,10 +2,9 @@ import * as z from "zod"
 
 export const registerSchema = z
   .object({
-    username: z
+    name: z
       .string()
-      .nonempty({ error: "نام کاربری الزامی است." })
-      .min(5, { error: "نام کاربری باید حداقل 5 حرف باشد" }),
+      .nonempty({ error: "نام و نام خانوادگی الزامی است." }),
 
     email: z.email({
       error: "فرمت ایمیل واردشده صحیح نمی باشد.",

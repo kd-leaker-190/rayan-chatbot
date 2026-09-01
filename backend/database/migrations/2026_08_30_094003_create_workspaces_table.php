@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
 
             $table->string('name');
-            $table->string('slug')->unique();
             $table->text('bio')->nullable();
 
             $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
