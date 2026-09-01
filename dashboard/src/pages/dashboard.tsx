@@ -146,29 +146,33 @@ export default function Dashboard() {
         <CardContent className="space-y-3">
           <h1 className="text-xl font-bold sm:text-2xl">داشبورد</h1>
           <p className="text-sm text-muted-foreground">
-            {user?.username} خوش آمدید 👋
+            {user?.name} عزیز به رایان‌چت خوش آمدید 👋
           </p>
-          <Separator />
 
-          <p className="text-sm text-muted-foreground">
-            هنوز میزکاری ندارید، برای شروع کار با رایان چت اطلاعات میزکار خود را
-            تکمیل کنید.
-          </p>
-          <Button
-            size="lg"
-            className={cn("py-2")}
-            onClick={handleCreateWorkspace}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <span>ساخت اولین میزکار</span>
-                <Spinner />
-              </>
-            ) : (
-              <span>ساخت اولین میزکار</span>
-            )}
-          </Button>
+          {user?.ownedWorkspaces && user?.ownedWorkspaces.length === 0 && (
+            <>
+              <Separator />
+              <p className="text-sm text-muted-foreground">
+                هنوز میزکاری ندارید، برای شروع کار با رایان چت اطلاعات میزکار
+                خود را تکمیل کنید.
+              </p>
+              <Button
+                size="lg"
+                className={cn("py-2")}
+                onClick={handleCreateWorkspace}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <span>ساخت اولین میزکار</span>
+                    <Spinner />
+                  </>
+                ) : (
+                  <span>ساخت اولین میزکار</span>
+                )}
+              </Button>
+            </>
+          )}
         </CardContent>
       </Card>
 

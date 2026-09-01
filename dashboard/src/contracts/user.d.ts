@@ -1,10 +1,8 @@
 interface IUser {
   id: number
-  username: string
+  name: string
   email: string
   email_verified_at?: string
-  first_name?: string
-  last_name?: string
   phone?: string
   phone_verified_at?: string
   avatar?: string
