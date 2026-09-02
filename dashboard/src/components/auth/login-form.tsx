@@ -81,7 +81,7 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
               className="flex w-full flex-col justify-center bg-white px-6 py-8 sm:px-10 md:w-1/2 md:px-12 lg:px-14"
             >
               <div className="mb-8 flex items-center justify-center gap-2 md:justify-start">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 p-1.5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted p-1.5">
                   <img
                     src={chatbotImage}
                     alt="آیکون رایان چت"
@@ -138,7 +138,7 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
                     <button
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-emerald-600"
+                      className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-muted"
                       aria-label={
                         showPassword ? "مخفی کردن رمزعبور" : "نمایش رمزعبور"
                       }
@@ -227,7 +227,7 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
               </FieldGroup>
             </form>
 
-            <div className="relative hidden min-h-90 w-full overflow-hidden bg-emerald-950 md:block md:min-h-0 md:w-1/2">
+            <div className="relative hidden min-h-90 w-full overflow-hidden bg-brand-dark md:block md:min-h-0 md:w-1/2">
               <img
                 src={loginPageImage}
                 alt="تصویر رایان چت"

@@ -32,6 +32,22 @@ export function useAuth() {
     }
   }
 
+  const userStatus = () => {
+    switch (response?.data?.status) {
+      case "active":
+        return "فعال"
+
+      case "inactive":
+        return "غیرفعال"
+
+      case "suspended":
+        return "مسدود شده"
+
+      default:
+        return "نامشخص"
+    }
+  }
+
   return {
     user: response?.data,
     isLoading,
@@ -41,5 +57,6 @@ export function useAuth() {
     error,
     mutate,
     logout,
+    userStatus,
   }
 }

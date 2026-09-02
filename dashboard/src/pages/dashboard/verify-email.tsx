@@ -44,7 +44,7 @@ export default function VerifyEmail() {
     <div className="flex min-h-screen items-center justify-center bg-muted p-4 antialiased">
       <div className="w-full max-w-md rounded-3xl border border-slate-100/80 bg-white p-8 text-center shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
         <div className="mb-8 flex items-center justify-center gap-2 md:justify-start">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 p-1.5">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted p-1.5">
             <img
               src={chatbotImage}
               alt="آیکون رایان چت"
@@ -71,15 +71,15 @@ export default function VerifyEmail() {
 
         <div className="my-8 flex justify-center">
           <div className="relative flex h-32 w-32 items-center justify-center">
-            <div className="relative flex h-24 w-28 flex-col items-center justify-end overflow-hidden rounded-2xl border border-emerald-200/50 bg-emerald-100/70 p-2 shadow-inner">
-              <div className="absolute top-1 flex h-14 w-20 flex-col gap-1.5 rounded-lg bg-emerald-200/60 p-2 shadow-xs">
-                <div className="h-1.5 w-full rounded-full bg-emerald-400/60" />
-                <div className="h-1.5 w-2/3 rounded-full bg-emerald-400/60" />
+            <div className="relative flex h-24 w-28 flex-col items-center justify-end overflow-hidden rounded-2xl border border-brand-soft/50 bg-brand-soft/70 p-2 shadow-inner">
+              <div className="absolute top-1 flex h-14 w-20 flex-col gap-1.5 rounded-lg bg-brand-soft/60 p-2 shadow-xs">
+                <div className="h-1.5 w-full rounded-full bg-brand/60" />
+                <div className="h-1.5 w-2/3 rounded-full bg-brand/60" />
               </div>
-              <div className="z-10 h-10 w-full rounded-b-xl border-t border-emerald-200/40 bg-emerald-50/80" />
+              <div className="z-10 h-10 w-full rounded-b-xl border-t border-brand-soft/40 bg-brand-soft/80" />
             </div>
 
-            <div className="absolute -bottom-1 -left-1 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg ring-4 shadow-emerald-500/30 ring-white">
+            <div className="absolute -bottom-1 -left-1 flex h-10 w-10 items-center justify-center rounded-full bg-brand text-white shadow-lg ring-4 shadow-brand/30 ring-white z-10">
               <svg
                 className="h-5 w-5 stroke-current"
                 fill="none"
@@ -96,7 +96,7 @@ export default function VerifyEmail() {
 
         <Button
           onClick={handleOpenEmailApp}
-          className="h-12 w-full rounded-xl bg-emerald-500 text-base font-semibold text-white shadow-md shadow-emerald-500/20 transition-all hover:bg-emerald-600 active:scale-[0.99]"
+          className="h-10 w-full rounded-xl bg-brand text-base font-semibold text-white shadow-md shadow-brand/20 transition-all active:scale-[0.99]"
         >
           باز کردن برنامه ایمیل
         </Button>
@@ -107,7 +107,7 @@ export default function VerifyEmail() {
             type="button"
             onClick={handleResend}
             disabled={loading}
-            className="inline-flex cursor-pointer items-center gap-1 font-bold text-emerald-600 transition-colors hover:text-emerald-700 hover:underline disabled:opacity-50"
+            className="inline-flex cursor-pointer items-center gap-1 font-bold text-brand transition-colors hover:text-brand-dark hover:underline disabled:opacity-50"
           >
             {loading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
             <span>ارسال مجدد</span>

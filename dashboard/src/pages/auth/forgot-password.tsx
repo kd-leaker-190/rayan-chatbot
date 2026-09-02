@@ -46,7 +46,7 @@ export default function ForgotPassword() {
       <div className="w-full max-w-100 rounded-3xl border border-slate-100/80 bg-white p-8 shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
         <Link to="/" className="flex items-start gap-2 self-start font-medium">
           <div className="my-3 flex items-center justify-center gap-2 md:justify-start">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 p-1.5">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted p-1.5">
               <img
                 src={chatbotImage}
                 alt="آیکون رایان چت"
@@ -97,7 +97,7 @@ export default function ForgotPassword() {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="h-10 w-full rounded-xl bg-brand text-base font-semibold text-white shadow-md shadow-emerald-500/20 transition-all active:scale-[0.99]"
+            className="h-10 w-full rounded-xl bg-brand text-base font-semibold text-white shadow-md shadow-brand/20 transition-all active:scale-[0.99]"
           >
             {isSubmitting ? (
               <span className="flex items-center justify-center gap-2">
@@ -116,7 +116,7 @@ export default function ForgotPassword() {
         <div className="mt-6 text-center">
           <Link
             to="/login"
-            className="text-xs font-semibold text-slate-500 transition-colors hover:text-emerald-600 sm:text-sm"
+            className="text-xs font-semibold text-slate-500 transition-colors hover:text-brand sm:text-sm"
           >
             بازگشت به صفحه ورود
           </Link>

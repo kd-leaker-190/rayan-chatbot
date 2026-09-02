@@ -74,7 +74,7 @@ export default function PasswordReset() {
       <div className="w-full max-w-100 rounded-3xl border border-slate-100/80 bg-white p-8 shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
         <Link to="/" className="flex items-start gap-2 self-start font-medium">
           <div className="my-3 flex items-center justify-center gap-2 md:justify-start">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 p-1.5">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted p-1.5">
               <img
                 src={chatbotImage}
                 alt="آیکون رایان چت"
@@ -117,7 +117,7 @@ export default function PasswordReset() {
                 type={showPassword ? "text" : "password"}
                 placeholder="یک رمز عبور قوی ایجاد کنید."
                 className={cn(
-                  "h-11 rounded-xl bg-slate-50/50 pr-3.5 pl-10 text-right focus-visible:ring-emerald-500"
+                  "h-11 rounded-xl bg-slate-50/50 pr-3.5 pl-10 text-right focus-visible:ring-brand"
                 )}
                 {...register("password")}
               />
@@ -125,7 +125,7 @@ export default function PasswordReset() {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-emerald-600"
+                className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-brand"
                 tabIndex={-1}
                 aria-label={
                   showPassword ? "مخفی کردن رمز عبور" : "نمایش رمز عبور"
@@ -159,7 +159,7 @@ export default function PasswordReset() {
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="رمز عبور را مجدداً وارد کنید."
                 className={cn(
-                  "h-11 rounded-xl bg-slate-50/50 pr-3.5 pl-10 text-right focus-visible:ring-emerald-500"
+                  "h-11 rounded-xl bg-slate-50/50 pr-3.5 pl-10 text-right focus-visible:ring-brand"
                 )}
                 {...register("password_confirmation")}
               />
@@ -167,7 +167,7 @@ export default function PasswordReset() {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
-                className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-emerald-600"
+                className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-brand"
                 tabIndex={-1}
                 aria-label={
                   showConfirmPassword ? "مخفی کردن رمز عبور" : "نمایش رمز عبور"
@@ -202,7 +202,7 @@ export default function PasswordReset() {
             <Button
               type="submit"
               disabled={isSubmitting || !token}
-              className="h-10 w-full rounded-xl bg-emerald-500 text-base font-semibold text-white shadow-md shadow-emerald-500/20 transition-all hover:bg-emerald-600 active:scale-[0.99]"
+              className="h-10 w-full rounded-xl bg-brand text-base font-semibold text-white shadow-md shadow-brand/20 transition-all active:scale-[0.99]"
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center gap-2">
