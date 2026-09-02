@@ -30,8 +30,10 @@ export const getCsrfToken = () => {
 
 api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
   const method = config.method?.toLowerCase()
-  
-  const isMutatingMethod = ["post", "put", "patch", "delete"].includes(method || "")
+
+  const isMutatingMethod = ["post", "put", "patch", "delete"].includes(
+    method || ""
+  )
 
   if (isMutatingMethod && !hasXsrfToken()) {
     await getCsrfToken()
@@ -43,7 +45,9 @@ api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean
+    }
 
     if (error.response?.status === 419 && !originalRequest._retry) {
       originalRequest._retry = true
@@ -59,7 +63,8 @@ api.interceptors.response.use(
 
 export function handleApiError<T extends FieldValues>(
   error: unknown,
-  setError: UseFormSetError<T>
+  setError: UseFormSetError<T>,
+  showField = true
 ) {
   if (!(error instanceof AxiosError)) {
     toast.error("خطایی رخ داده است.")
@@ -69,15 +74,17 @@ export function handleApiError<T extends FieldValues>(
   const response = error.response?.data as IApiErrorResponse | undefined
 
   // Validation errors
-  if (response?.errors) {
-    Object.entries(response.errors).forEach(([field, messages]) => {
-      const message = Array.isArray(messages) ? messages[0] : String(messages)
+  if (showField) {
+    if (response?.errors) {
+      Object.entries(response.errors).forEach(([field, messages]) => {
+        const message = Array.isArray(messages) ? messages[0] : String(messages)
 
-      setError(field as FieldPath<T>, {
-        type: "server",
-        message,
+        setError(field as FieldPath<T>, {
+          type: "server",
+          message,
+        })
       })
-    })
+    }
   }
 
   // General API message

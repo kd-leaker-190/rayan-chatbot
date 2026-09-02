@@ -2,9 +2,9 @@ import * as z from "zod"
 
 export const registerSchema = z
   .object({
-    name: z
-      .string()
-      .nonempty({ error: "نام و نام خانوادگی الزامی است." }),
+    first_name: z.string().nonempty({ error: "نام الزامی است." }),
+
+    last_name: z.string().nonempty({ error: "نام خانوادگی الزامی است." }),
 
     email: z.email({
       error: "فرمت ایمیل واردشده صحیح نمی باشد.",

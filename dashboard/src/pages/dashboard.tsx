@@ -40,7 +40,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 
 const stats = [
   {
@@ -111,7 +110,7 @@ export default function Dashboard() {
     setTimeout(() => {
       setIsLoading(false)
       setIsModalOpen(true)
-    }, 1500)
+    }, 1000)
   }
 
   const {
@@ -123,15 +122,14 @@ export default function Dashboard() {
     mode: "onChange",
     resolver: zodResolver(createWorkspaceSchema),
     defaultValues: {
-      name: "",
-      bio: "",
+      title: "",
+      domain: "",
     },
   })
 
   const onSubmit = async (data: CreateWorkspaceSchema) => {
     try {
-      const res = await api.post("api/v1/workspaces", data)
-      console.log(res.data)
+      const res = await api.post("api/v1/websites", data)
       await mutate()
       setIsModalOpen(false)
       toast.success(res.data.message)
@@ -146,14 +144,15 @@ export default function Dashboard() {
         <CardContent className="space-y-3">
           <h1 className="text-xl font-bold sm:text-2xl">داشبورد</h1>
           <p className="text-sm text-muted-foreground">
-            {user?.name} عزیز به رایان‌چت خوش آمدید 👋
+            {user?.first_name + " " + user?.last_name} عزیز به رایان‌چت خوش
+            آمدید 👋
           </p>
 
-          {user?.ownedWorkspaces && user?.ownedWorkspaces.length === 0 && (
+          {user?.owned_websites.length === 0 && (
             <>
               <Separator />
               <p className="text-sm text-muted-foreground">
-                هنوز میزکاری ندارید، برای شروع کار با رایان چت اطلاعات میزکار
+                هنوز وبسایتی ندارید، برای شروع کار با رایان چت اطلاعات وبسایت
                 خود را تکمیل کنید.
               </p>
               <Button
@@ -164,11 +163,11 @@ export default function Dashboard() {
               >
                 {isLoading ? (
                   <>
-                    <span>ساخت اولین میزکار</span>
+                    <span>ساخت اولین وبسایت</span>
                     <Spinner />
                   </>
                 ) : (
-                  <span>ساخت اولین میزکار</span>
+                  <span>ساخت اولین وبسایت</span>
                 )}
               </Button>
             </>
@@ -176,88 +175,88 @@ export default function Dashboard() {
         </CardContent>
       </Card>
 
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-106.25 [&>button]:right-auto [&>button]:left-4">
-          <DialogHeader>
-            <DialogTitle>ایجاد میزکار جدید</DialogTitle>
-            <DialogDescription>
-              مشخصات میزکار خود را وارد کنید تا راه‌اندازی اولیه انجام شود.
-            </DialogDescription>
-          </DialogHeader>
+      {user?.owned_websites?.length === 0 && (
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="sm:max-w-106.25 [&>button]:right-auto [&>button]:left-4">
+            <DialogHeader>
+              <DialogTitle>ایجاد وبسایت جدید</DialogTitle>
+              <DialogDescription>
+                مشخصات وبسایت خود را وارد کنید تا راه‌اندازی اولیه انجام شود.
+              </DialogDescription>
+            </DialogHeader>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            id="create-workspace"
-            className="space-y-4 py-4"
-          >
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="name">نام میزکار</FieldLabel>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="میزکار رایان"
-                  className={cn("py-5")}
-                  {...register("name")}
-                />
-                {errors.name && (
-                  <FieldDescription
-                    className={cn("text-red-500", "text-sm", "text-right")}
-                  >
-                    {errors.name.message}
-                  </FieldDescription>
-                )}
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="bio">توضیح مختصر (اختیاری)</FieldLabel>
-
-                <div className="relative">
-                  <Textarea
-                    id="bio"
-                    placeholder="یک توضیح مختصر درباره میزکار وارد کنید."
-                    {...register("bio")}
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              id="create-workspace"
+              className="space-y-4 py-4"
+            >
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="title">عنوان وبسایت</FieldLabel>
+                  <Input
+                    id="title"
+                    type="text"
+                    placeholder="وبسایت رایان فناوری"
+                    className={cn("py-5")}
+                    {...register("title")}
                   />
-                </div>
+                  {errors.title && (
+                    <FieldDescription
+                      className={cn("text-red-500", "text-sm", "text-right")}
+                    >
+                      {errors.title.message}
+                    </FieldDescription>
+                  )}
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="domain">آدرس وبسایت</FieldLabel>
+                  <Input
+                    id="domain"
+                    type="text"
+                    placeholder="rayanfanavari.ir"
+                    className={cn("py-5")}
+                    {...register("domain")}
+                  />
+                  {errors.domain && (
+                    <FieldDescription
+                      className={cn("text-red-500", "text-sm", "text-right")}
+                    >
+                      {errors.domain.message}
+                    </FieldDescription>
+                  )}
+                </Field>
+              </FieldGroup>
 
-                {errors.bio && (
-                  <FieldDescription
-                    className={cn("text-red-500", "text-sm", "text-right")}
-                  >
-                    {errors.bio.message}
-                  </FieldDescription>
-                )}
-              </Field>
-            </FieldGroup>
+              <div className="flex justify-end gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsModalOpen(false)}
+                  className={cn("py-4")}
+                >
+                  انصراف
+                </Button>
+                <Button
+                  disabled={isSubmitting}
+                  type="submit"
+                  form="create-workspace"
+                  className={cn("py-4")}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      ایجاد وبسایت
+                      <Spinner />
+                    </span>
+                  ) : (
+                    <span>ایجاد وبسایت</span>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
 
-            <div className="flex justify-end gap-2 pt-2">
-              <Button
-                variant="outline"
-                onClick={() => setIsModalOpen(false)}
-                className={cn("py-4")}
-              >
-                انصراف
-              </Button>
-              <Button
-                disabled={isSubmitting}
-                type="submit"
-                form="create-workspace"
-                className={cn("py-4")}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    ایجاد میزکار
-                    <Spinner />
-                  </span>
-                ) : (
-                  <span>ایجاد میزکار</span>
-                )}
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {user?.ownedWorkspaces && user?.ownedWorkspaces.length >= 1 && (
+      {user?.owned_websites && user?.owned_websites?.length > 0 && (
         <>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((s) => (

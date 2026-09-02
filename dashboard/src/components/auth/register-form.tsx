@@ -54,7 +54,8 @@ export default function RegisterForm({
     mode: "onChange",
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
+      first_name: "",
+      last_name: "",
       email: "",
       password: "",
       password_confirmation: "",
@@ -102,22 +103,43 @@ export default function RegisterForm({
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="name">نام و نام خانوادگی</FieldLabel>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="محمد ناصری"
-                  className={cn("py-5")}
-                  {...register("name")}
-                />
-                {errors.name && (
-                  <FieldDescription
-                    className={cn("text-red-500", "text-sm", "text-right")}
-                  >
-                    {errors.name.message}
-                  </FieldDescription>
-                )}
+              <Field
+                className={cn("grid", "grid-cols-1", "md:grid-cols-2", "gap-2")}
+              >
+                <Field>
+                  <FieldLabel htmlFor="first_name">نام</FieldLabel>
+                  <Input
+                    id="first_name"
+                    type="text"
+                    placeholder="شکیب"
+                    className={cn("py-5")}
+                    {...register("first_name")}
+                  />
+                  {errors.first_name && (
+                    <FieldDescription
+                      className={cn("text-red-500", "text-sm", "text-right")}
+                    >
+                      {errors.first_name.message}
+                    </FieldDescription>
+                  )}
+                </Field>
+                 <Field>
+                  <FieldLabel htmlFor="last_name">نام خانوادگی</FieldLabel>
+                  <Input
+                    id="last_name"
+                    type="text"
+                    placeholder="زیدی"
+                    className={cn("py-5")}
+                    {...register("last_name")}
+                  />
+                  {errors.last_name && (
+                    <FieldDescription
+                      className={cn("text-red-500", "text-sm", "text-right")}
+                    >
+                      {errors.last_name.message}
+                    </FieldDescription>
+                  )}
+                </Field>
               </Field>
               <Field>
                 <FieldLabel htmlFor="email">ایمیل</FieldLabel>
@@ -139,7 +161,6 @@ export default function RegisterForm({
               </Field>
               <Field>
                 <FieldLabel htmlFor="password">رمزعبور</FieldLabel>
-
                 <div className="relative">
                   <Input
                     id="password"
@@ -148,7 +169,6 @@ export default function RegisterForm({
                     className={cn("py-5")}
                     {...register("password")}
                   />
-
                   <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
@@ -164,7 +184,6 @@ export default function RegisterForm({
                     )}
                   </button>
                 </div>
-
                 {errors.password && (
                   <FieldDescription
                     className={cn("text-red-500", "text-sm", "text-right")}
@@ -177,7 +196,6 @@ export default function RegisterForm({
                 <FieldLabel htmlFor="password_confirmation">
                   تکرار رمزعبور
                 </FieldLabel>
-
                 <Input
                   id="password_confirmation"
                   type={showPassword ? "text" : "password"}
@@ -199,7 +217,7 @@ export default function RegisterForm({
                   size="lg"
                   disabled={isSubmitting}
                   className={cn(
-                    "h-12",
+                    "h-10",
                     "w-full",
                     "rounded-lg",
                     "bg-brand",

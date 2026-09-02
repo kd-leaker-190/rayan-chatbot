@@ -202,7 +202,7 @@ export default function PasswordReset() {
             <Button
               type="submit"
               disabled={isSubmitting || !token}
-              className="h-12 w-full rounded-xl bg-emerald-500 text-base font-semibold text-white shadow-md shadow-emerald-500/20 transition-all hover:bg-emerald-600 active:scale-[0.99]"
+              className="h-10 w-full rounded-xl bg-emerald-500 text-base font-semibold text-white shadow-md shadow-emerald-500/20 transition-all hover:bg-emerald-600 active:scale-[0.99]"
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center gap-2">

@@ -62,7 +62,7 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
       await mutate()
       navigate("/dashboard")
     } catch (error) {
-      handleApiError(error, setError)
+      handleApiError(error, setError, false)
     }
   }
 
@@ -197,7 +197,7 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
                   type="submit"
                   size="lg"
                   className={cn(
-                    "h-12",
+                    "h-10",
                     "w-full",
                     "rounded-lg",
                     "bg-brand",

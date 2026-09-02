@@ -1,12 +1,23 @@
 import * as z from "zod"
 
-export const createWorkspaceSchema = z.object({
-  name: z
-    .string()
-    .nonempty({ error: "نام میزکار الزامی است." })
-    .min(5, { error: "نام میزکار باید حداقل 5 حرف باشد" }),
+const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/
 
-  bio: z.string().optional(),
+export const createWorkspaceSchema = z.object({
+  title: z.string().min(1, "نام وبسایت الزامی است."),
+  domain: z
+    .string()
+    .min(1, "آدرس وبسایت الزامی است.")
+    .transform((val) => {
+      let clean = val.trim().toLowerCase()
+      clean = clean.replace(/^https?:\/\/(www\.)?/i, "")
+      clean = clean.split("/")[0]
+      return clean
+    })
+    .pipe(
+      z
+        .string()
+        .regex(domainRegex, "فرمت دامنه نامعتبر است. (مثال: rayanfanavari.ir)")
+    ),
 })
 
 export type CreateWorkspaceSchema = z.infer<typeof createWorkspaceSchema>

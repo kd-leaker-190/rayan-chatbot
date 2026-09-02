@@ -16,8 +16,7 @@ class UserController extends Controller
 {
     public function show(Request $request): JsonResponse
     {
-        $user = $request->user();
-        $user->load(['ownedWorkspaces']);
+        $user = $request->user()->load(['ownedWebsites']);
         return ApiResponse::success(
             data: new UserResource($user)
         );

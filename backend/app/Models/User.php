@@ -22,7 +22,6 @@ use Illuminate\Notifications\Notifiable;
     'last_name',
     'email',
     'password',
-    'status',
 ])]
 #[Hidden([
     'password',
@@ -62,7 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Website::class, 'owner_id');
     }
 
-    public function operatorMemberships(): HasMany
+    public function operators(): HasMany
     {
         return $this->hasMany(Operator::class);
     }
