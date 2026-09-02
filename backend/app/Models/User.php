@@ -16,13 +16,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 #[Fillable([
-    'name',
+    'first_name',
+    'last_name',
     'email',
-    'email_verified_at',
     'password',
-    'phone',
-    'phone_verified_at',
-    'avatar',
     'status',
 ])]
 
@@ -45,7 +42,6 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
-            'phone_verified_at' => 'datetime',
             'password' => 'hashed',
             'status' => UserStatus::class,
         ];
