@@ -57,13 +57,8 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new QueuedResetPasswordEmail($token));
     }
 
-    public function ownedWorkspaces(): HasMany
+    public function websites(): HasMany
     {
-        return $this->hasMany(Workspace::class, 'owner_id');
-    }
-
-    public function operators(): HasMany
-    {
-        return $this->hasMany(Operator::class);
+        return $this->hasMany(Website::class);
     }
 }
