@@ -23,4 +23,9 @@ class Website extends Model
     {
         return $this->hasMany(Role::class);
     }
+
+    public function operators(): HasMany
+    {
+        return $this->hasMany(Operator::class);
+    }
 }
