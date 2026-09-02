@@ -2,18 +2,14 @@
 
 namespace App\Models;
 
-use App\Enums\OperatorStatus;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-#[Fillable([
-    'status',
+#[Hidden([
+    'token_hash'
 ])]
-class Operator extends Model
+class OperatorInvitation extends Model
 {
     /**
      * Get the attributes that should be cast.
@@ -23,13 +19,9 @@ class Operator extends Model
     protected function casts(): array
     {
         return [
-            'status' => OperatorStatus::class,
+            'expires_at' => 'datetime',
+            'accepted_at' => 'datetime',
         ];
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function website(): BelongsTo
@@ -42,13 +34,13 @@ class Operator extends Model
         return $this->belongsTo(Role::class);
     }
 
-    public function conversations(): HasMany
+    public function invitedBy(): BelongsTo
     {
-        return $this->hasMany(Conversation::class);
+        return $this->belongsTo(User::class, 'invited_by_user_id');
     }
 
-    public function messages(): MorphMany
+    public function acceptedBy(): BelongsTo
     {
-        return $this->morphMany(Message::class, 'sender');
+        return $this->belongsTo(User::class, 'accepted_by_user_id');
     }
 }

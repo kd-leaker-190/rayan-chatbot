@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('websites', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('owner_id')->constrained('users')->nullOnDelete();
+            $table->foreignId('owner_id')->constrained('users')->restrictOnDelete();
 
             $table->string('title');
-            $table->string('address')->unique();
+            $table->string('domain')->unique();
 
             $table->timestamps();
         });

@@ -24,13 +24,15 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('website_id')->nullable()->constrained('websites')->cascadeOnDelete();
+            $table->foreignId('website_id')->nullable()->constrained('websites')->nullOnDelete();
 
             $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->text('description')->nullable();
 
             $table->boolean('is_system')->default(false);
+
+            $table->unique(['website_id', 'slug']);
 
             $table->timestamps();
         });
@@ -48,6 +50,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles_and_permissions');
+        Schema::dropIfExists('role_permissions');
+        Schema::dropIfExists('roles');
+        Schema::dropIfExists('permissions');
     }
 };

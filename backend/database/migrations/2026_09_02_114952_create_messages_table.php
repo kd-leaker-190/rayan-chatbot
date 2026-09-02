@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('conversation_id')->constrained('conversations')->cascadeOnDelete();
+
             $table->morphs('sender');
 
-            $table->string('message');
+            $table->text('body');
 
-            $table->enum('status', ['operator_answer', 'visitor_answer', 'seen_by_operator', 'seen_by_visitor']);
+            $table->index(['conversation_id', 'created_at']);
 
             $table->timestamps();
         });

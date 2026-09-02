@@ -9,11 +9,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
-    'visitor_id',
-    'operator_id',
     'title',
-    'message',
     'status',
+    'accepted_at',
+    'closed_at',
 ])]
 class Conversation extends Model
 {
@@ -26,7 +25,14 @@ class Conversation extends Model
     {
         return [
             'status' => ConversationStatus::class,
+            'accepted_at' => 'datetime',
+            'closed_at' => 'datetime',
         ];
+    }
+
+    public function website(): BelongsTo
+    {
+        return $this->belongsTo(Website::class);
     }
 
     public function visitor(): BelongsTo

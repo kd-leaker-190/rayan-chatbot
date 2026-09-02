@@ -9,11 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 #[Fillable([
-    'conversation_id',
-    'sender_id',
-    'sender_type',
-    'message',
-    'status',
+    'body'
 ])]
 class Message extends Model
 {

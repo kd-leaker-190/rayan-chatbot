@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'owner_id',
     'title',
-    'address',
+    'domain',
 ])]
 class Website extends Model
 {

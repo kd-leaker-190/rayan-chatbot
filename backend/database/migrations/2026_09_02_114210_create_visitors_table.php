@@ -13,10 +13,15 @@ return new class extends Migration
     {
         Schema::create('visitors', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('website_id')->constrained('websites')->cascadeOnDelete();
 
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email');
+            $table->ulid('public_id')->unique();
+
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('email')->nullable();
+
+            $table->index(['website_id', 'email']);
 
             $table->timestamps();
         });

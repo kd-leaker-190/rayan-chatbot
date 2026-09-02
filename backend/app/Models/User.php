@@ -11,6 +11,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,12 +24,10 @@ use Illuminate\Notifications\Notifiable;
     'password',
     'status',
 ])]
-
 #[Hidden([
     'password',
     'remember_token'
 ])]
-
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
@@ -58,14 +57,31 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new QueuedResetPasswordEmail($token));
     }
 
-    public function websites(): HasMany
+    public function ownedWebsites(): HasMany
     {
-        return $this->hasMany(Website::class);
+        return $this->hasMany(Website::class, 'owner_id');
     }
 
-    public function operators(): HasMany
+    public function operatorMemberships(): HasMany
     {
         return $this->hasMany(Operator::class);
+    }
+
+    public function sentOperatorInvitations(): HasMany
+    {
+        return $this->hasMany(OperatorInvitation::class, 'invited_by_user_id');
+    }
+
+    public function acceptedOperatorInvitations(): HasMany
+    {
+        return $this->hasMany(OperatorInvitation::class, 'accepted_by_user_id');
+    }
+
+    public function operatedWebsites(): BelongsToMany
+    {
+        return $this->belongsToMany(Website::class, 'operators', 'user_id', 'website_id')
+            ->withPivot(['id', 'role_id', 'status'])
+            ->withTimestamps();
     }
 
     public function messages(): MorphMany

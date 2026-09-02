@@ -14,13 +14,23 @@ return new class extends Migration
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('visitor_id')->constrained('visitors')->nullOnDelete();
+            $table->foreignId('website_id')->constrained('websites')->cascadeOnDelete();
+            $table->foreignId('visitor_id')->constrained('visitors')->restrictOnDelete();
             $table->foreignId('operator_id')->nullable()->constrained('operators')->nullOnDelete();
 
             $table->string('title');
-            $table->text('message');
 
-            $table->enum('status', ['started', 'accepted', 'rejected'])->default('started');
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
+
+            $table->timestamp('accepted_at')->nullable();
+            $table->timestamp('closed_at')->nullable();
+
+            $table->timestamp('visitor_last_read_at')->nullable();
+            $table->timestamp('operator_last_read_at')->nullable();
+
+            $table->index(['website_id', 'status']);
+            $table->index(['operator_id', 'status']);
+            $table->index(['visitor_id', 'created_at']);
 
             $table->timestamps();
         });

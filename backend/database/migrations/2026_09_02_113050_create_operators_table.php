@@ -14,21 +14,15 @@ return new class extends Migration
         Schema::create('operators', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('owner_id')->constrained('users')->nullOnDelete();
-            $table->foreignId('website_id')->constrained('websites')->nullOnDelete();
-            $table->foreignId('role_id')->constrained('roles')->nullOnDelete();
-
-            $table->string('first_name');
-            $table->string('last_name');
-
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-
-            $table->string('password');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('website_id')->constrained('websites')->cascadeOnDelete();
+            $table->foreignId('role_id')->constrained('roles')->restrictOnDelete();
 
             $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
 
-            $table->rememberToken();
+            $table->unique(['user_id', 'website_id']);
+            $table->index(['website_id', 'status']);
+
             $table->timestamps();
         });
     }
