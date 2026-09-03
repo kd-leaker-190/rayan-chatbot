@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Website\StoreWebsiteRequest;
+use App\Http\Requests\Website\UpdateWebsiteRequest;
 use App\Http\Resources\WebsiteResource;
 use App\Models\Website;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Throwable;
 
 class WebsiteController extends Controller
@@ -17,9 +17,16 @@ class WebsiteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $websites = $request->user()
+            ->ownedWebsites()
+            ->latest()
+            ->get();
+
+        return ApiResponse::success(
+            data: WebsiteResource::collection($websites),
+        );
     }
 
     /**
@@ -54,15 +61,34 @@ class WebsiteController extends Controller
      */
     public function show(Website $website)
     {
-        //
+        $this->authorize('view', $website);
+
+        return ApiResponse::success(
+            data: new WebsiteResource($website),
+        );
     }
 
     /**
      * Update the specified resource in storage.
+     * @throws Throwable
      */
-    public function update(Request $request, Website $website)
+    public function update(UpdateWebsiteRequest $request, Website $website)
     {
-        //
+        $this->authorize('update', $website);
+
+        $website = DB::transaction(function () use ($request, $website) {
+            $website->update([
+                'title' => $request->validated('title'),
+                'domain' => $request->validated('domain'),
+            ]);
+
+            return $website;
+        });
+
+        return ApiResponse::success(
+            data: new WebsiteResource($website),
+            message: 'وبسایت شما با موفقیت ویرایش شد.',
+        );
     }
 
     /**
@@ -70,6 +96,12 @@ class WebsiteController extends Controller
      */
     public function destroy(Website $website)
     {
-        //
+        $this->authorize('delete', $website);
+
+        $website->delete();
+
+        return ApiResponse::success(
+            message: 'وبسایت شما با موفقیت حذف شد.'
+        );
     }
 }
