@@ -1,10 +1,11 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
+import useSWR from "swr"
 import { zodResolver } from "@hookform/resolvers/zod"
 
-import { handleApiError } from "@/lib/api"
-import { useWebsite } from "@/hooks/use-website"
+import { api, fetcher, handleApiError } from "@/lib/api"
+import type { IApiResponse } from "@/contracts/api"
 
 import {
   createWorkspaceSchema,
@@ -32,11 +33,17 @@ import { Button } from "@/components/ui/button"
 export default function CreateWebsiteDialog() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { createWebsite, isCreating } = useWebsite()
+  const { mutate } = useSWR<IApiResponse<IWebsite[]>>(
+    "/api/v1/websites",
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  )
 
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
     register,
     reset,
@@ -51,12 +58,14 @@ export default function CreateWebsiteDialog() {
 
   const onSubmit = async (data: CreateWorkspaceSchema) => {
     try {
-      const response = await createWebsite(data)
+      const res = await api.post("/api/v1/websites", data)
+
+      await mutate()
 
       reset()
       setIsModalOpen(false)
 
-      toast.success(response.message || "وب‌سایت با موفقیت ایجاد شد")
+      toast.success(res.data.message || "وبسایت شما با موفقیت ایجاد شد.")
     } catch (error) {
       handleApiError(error, setError)
     }
@@ -129,14 +138,14 @@ export default function CreateWebsiteDialog() {
               انصراف
             </Button>
 
-            <Button disabled={isCreating} type="submit" className="py-4">
-              {isCreating ? (
+            <Button disabled={isSubmitting} type="submit" className="py-4">
+              {isSubmitting ? (
                 <span className="flex items-center gap-2">
                   ایجاد وب‌سایت
                   <Spinner />
                 </span>
               ) : (
-                "ایجاد وب‌سایت"
+                <span className="flex items-center gap-2">ایجاد وب‌سایت</span>
               )}
             </Button>
           </div>

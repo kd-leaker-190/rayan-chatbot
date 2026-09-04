@@ -53,22 +53,4 @@ class UserController extends Controller
             message: 'اطلاعات شما با موفقیت به روزرسانی شد.'
         );
     }
-
-    public function checkUserWebsiteStatus(Request $request): JsonResponse
-    {
-        $user = $request->user();
-        if ($user->ownedWebsites()->count() > 0) {
-            return ApiResponse::success(
-                data: [
-                    'has_website' => true
-                ]
-            );
-        }
-
-        return ApiResponse::success(
-            data: [
-                'has_website' => false
-            ]
-        );
-    }
 }

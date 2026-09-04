@@ -1,26 +1,16 @@
-import type { KeyedMutator } from "swr"
-
-import type { IApiResponse } from "@/contracts/api"
-
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 
 import WelcomWidgetSkeleton from "@/components/dashboard/skeletons/welcome-widget"
-import CreateWebsiteDialogWidget from "@/components/dashboard/widgets/create-website-dialog"
+import CreateWebsiteDialog from "@/components/dashboard/widgets/create-website-dialog"
 
 interface IProps {
   user?: IUser
   isLoading: boolean
   hasWebsite: boolean | null
-  mutateWebsite: KeyedMutator<IApiResponse<IHasWebsiteStatus>>
 }
 
-export default function Welcome({
-  user,
-  isLoading,
-  hasWebsite,
-  mutateWebsite,
-}: IProps) {
+export default function Welcome({ user, isLoading, hasWebsite }: IProps) {
   return (
     <>
       {isLoading ? (
@@ -43,7 +33,7 @@ export default function Welcome({
                   خود را تکمیل کنید.
                 </p>
 
-                <CreateWebsiteDialogWidget mutateWebsite={mutateWebsite} />
+                <CreateWebsiteDialog />
               </>
             )}
           </CardContent>

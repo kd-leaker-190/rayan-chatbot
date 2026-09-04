@@ -6,7 +6,3 @@ interface IWebsite {
   created_at: string
   updated_at: string
 }
-
-interface IHasWebsiteStatus {
-  has_website: boolean
-}
