@@ -9,6 +9,8 @@ Route::prefix('v1')->group(function () {
         Route::prefix('user')->group(function () {
             Route::get('/', [UserController::class, 'show']);
             Route::put('/', [UserController::class, 'update']);
+
+            Route::get('has-website', [UserController::class, 'checkUserWebsiteStatus']);
         });
 
         Route::apiResource('websites', WebsiteController::class);

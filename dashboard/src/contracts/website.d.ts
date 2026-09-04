@@ -8,3 +8,7 @@ interface IWebsite {
     status: string
   }
 }
+
+interface IHasWebsiteStatus {
+  has_website: boolean
+}
