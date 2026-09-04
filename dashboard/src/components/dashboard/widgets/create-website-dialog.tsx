@@ -1,11 +1,10 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import useSWR from "swr"
 import { zodResolver } from "@hookform/resolvers/zod"
 
-import { api, fetcher, handleApiError } from "@/lib/api"
-import type { IApiResponse } from "@/contracts/api"
+import { api,  handleApiError } from "@/lib/api"
+import { useWebsite } from "@/hooks/use-website"
 
 import {
   createWorkspaceSchema,
@@ -33,13 +32,7 @@ import { Button } from "@/components/ui/button"
 export default function CreateWebsiteDialog() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { mutate } = useSWR<IApiResponse<IWebsite[]>>(
-    "/api/v1/websites",
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  )
+  const { mutate } = useWebsite()
 
   const {
     handleSubmit,

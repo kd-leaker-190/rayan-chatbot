@@ -1,9 +1,6 @@
 import { useState } from "react"
 
-import useSWR from "swr"
-
-import { fetcher } from "@/lib/api"
-import type { IApiResponse } from "@/contracts/api"
+import { useWebsite } from "@/hooks/use-website"
 
 import {
   Globe,
@@ -41,13 +38,7 @@ import {
 import CreateWebsiteDialog from "@/components/dashboard/widgets/create-website-dialog"
 
 export default function Websites() {
-  const { data, isLoading } = useSWR<IApiResponse<IWebsite[]>>(
-    "/api/v1/websites",
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  )
+  const { websites, isLoading } = useWebsite()
 
   const [copiedId, setCopiedId] = useState<number | null>(null)
 
@@ -115,7 +106,7 @@ export default function Websites() {
           ))}
 
         {!isLoading &&
-          data?.data.map((website) => (
+          websites?.map((website) => (
             <Card
               key={website.id}
               className="group relative flex flex-col justify-between border bg-card/60 backdrop-blur-sm transition-all duration-200 hover:border-primary/40 hover:shadow-md"
@@ -255,7 +246,7 @@ export default function Websites() {
           ))}
       </div>
 
-      {!isLoading && data?.data?.length === 0 && (
+      {!isLoading && websites?.length === 0 && (
         <Card className="flex flex-col items-center justify-center p-8 text-center">
           <div className="rounded-full bg-muted p-4">
             <Globe className="h-8 w-8 text-muted-foreground" />
@@ -267,7 +258,7 @@ export default function Websites() {
             هنوز وب‌سایتی اضافه نکرده‌اید. با کلیک بر روی دکمه زیر اولین وب‌سایت
             خود را ایجاد کنید.
           </p>
-          <Button className="mt-4 gap-2" size="sm">
+          <Button className="mt-4 gap-2" size="lg">
             <Plus className="h-4 w-4" />
             افزودن وب‌سایت جدید
           </Button>
