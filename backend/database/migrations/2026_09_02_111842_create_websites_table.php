@@ -18,6 +18,7 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('domain')->unique();
+            $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
 
             $table->timestamps();
         });

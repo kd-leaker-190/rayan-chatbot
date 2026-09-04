@@ -2,10 +2,9 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
-import type { KeyedMutator } from "swr"
 
-import { api, handleApiError } from "@/lib/api"
-import type { IApiResponse } from "@/contracts/api"
+import { handleApiError } from "@/lib/api"
+import { useWebsite } from "@/hooks/use-website"
 
 import {
   createWorkspaceSchema,
@@ -30,16 +29,14 @@ import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@/components/ui/button"
 
-export default function CreateWebsiteDialog({
-  mutateWebsite,
-}: {
-  mutateWebsite: KeyedMutator<IApiResponse<IHasWebsiteStatus>>
-}) {
+export default function CreateWebsiteDialog() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const { createWebsite, isCreating } = useWebsite()
 
   const {
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setError,
     register,
     reset,
@@ -54,13 +51,12 @@ export default function CreateWebsiteDialog({
 
   const onSubmit = async (data: CreateWorkspaceSchema) => {
     try {
-      const res = await api.post("/api/v1/websites", data)
-
-      await mutateWebsite()
+      const response = await createWebsite(data)
 
       reset()
       setIsModalOpen(false)
-      toast.success(res.data.message || "وبسایت با موفقیت ایجاد شد")
+
+      toast.success(response.message || "وب‌سایت با موفقیت ایجاد شد")
     } catch (error) {
       handleApiError(error, setError)
     }
@@ -71,33 +67,28 @@ export default function CreateWebsiteDialog({
       <DialogTrigger
         render={
           <Button size="lg" className="mt-2">
-            ساخت اولین وبسایت
+            ساخت وب‌سایت
           </Button>
         }
       />
 
       <DialogContent className="sm:max-w-106.25 [&>button]:right-auto [&>button]:left-4">
         <DialogHeader>
-          <DialogTitle>ایجاد وبسایت جدید</DialogTitle>
-
+          <DialogTitle>ایجاد وب‌سایت جدید</DialogTitle>
           <DialogDescription>
-            مشخصات وبسایت خود را وارد کنید تا راه‌اندازی اولیه انجام شود.
+            مشخصات وب‌سایت خود را وارد کنید تا راه‌اندازی اولیه انجام شود.
           </DialogDescription>
         </DialogHeader>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          id="create-workspace"
-          className="space-y-4 py-4"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="title">عنوان وبسایت</FieldLabel>
+              <FieldLabel htmlFor="title">عنوان وب‌سایت</FieldLabel>
 
               <Input
                 id="title"
                 type="text"
-                placeholder="وبسایت رایان فناوری"
+                placeholder="وب‌سایت رایان فناوری"
                 className="py-5"
                 {...register("title")}
               />
@@ -110,7 +101,7 @@ export default function CreateWebsiteDialog({
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="domain">آدرس وبسایت</FieldLabel>
+              <FieldLabel htmlFor="domain">آدرس وب‌سایت</FieldLabel>
 
               <Input
                 id="domain"
@@ -138,19 +129,14 @@ export default function CreateWebsiteDialog({
               انصراف
             </Button>
 
-            <Button
-              disabled={isSubmitting}
-              type="submit"
-              form="create-workspace"
-              className="py-4"
-            >
-              {isSubmitting ? (
+            <Button disabled={isCreating} type="submit" className="py-4">
+              {isCreating ? (
                 <span className="flex items-center gap-2">
-                  ایجاد وبسایت
+                  ایجاد وب‌سایت
                   <Spinner />
                 </span>
               ) : (
-                <span>ایجاد وبسایت</span>
+                "ایجاد وب‌سایت"
               )}
             </Button>
           </div>

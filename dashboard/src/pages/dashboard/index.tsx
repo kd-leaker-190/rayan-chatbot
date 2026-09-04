@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/use-auth"
-import { useWebsite } from "@/hooks/use-website"
+import { useHasWebsite } from "@/hooks/use-has-website"
 
 import StatsWidget from "@/components/dashboard/skeletons/stats-widget"
 import ChartWidget from "@/components/dashboard/skeletons/chart-widget"
@@ -11,7 +11,7 @@ import RecentChats from "@/components/dashboard/widgets/recent-chats"
 
 export default function Dashboard() {
   const { user } = useAuth()
-  const { hasWebsite, isLoading, mutateWebsite } = useWebsite()
+  const { hasWebsite, isLoading, mutateWebsite } = useHasWebsite()
 
   return (
     <div className="space-y-6">

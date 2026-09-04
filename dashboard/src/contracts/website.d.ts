@@ -2,11 +2,9 @@ interface IWebsite {
   id: number
   title: string
   domain: string
-  membership: {
-    operator_id: number
-    role_id: null
-    status: string
-  }
+  status: "active" | "inactive" | "suspended"
+  created_at: string
+  updated_at: string
 }
 
 interface IHasWebsiteStatus {
