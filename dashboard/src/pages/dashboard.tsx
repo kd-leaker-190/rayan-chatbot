@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -100,15 +100,53 @@ const recentChats = [
 ]
 
 export default function Dashboard() {
-  const { user, mutate } = useAuth()
+  const { user } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const [isSubmittingDialog, setIsSubmittingDialog] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [websites, setWebsites] = useState<IWebsite[] | []>([])
+
+  const fetchWebsites = useCallback(async () => {
+    try {
+      setIsLoading(true)
+      const res = await api.get("/api/v1/websites")
+      setWebsites(res.data.data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    let ignore = false
+
+    const loadData = async () => {
+      try {
+        setIsLoading(true)
+        const res = await api.get("/api/v1/websites")
+        if (!ignore) {
+          setWebsites(res.data.data)
+        }
+      } catch (error) {
+        if (!ignore) console.error(error)
+      } finally {
+        if (!ignore) setIsLoading(false)
+      }
+    }
+
+    loadData()
+
+    return () => {
+      ignore = true
+    }
+  }, [])
 
   const handleCreateWorkspace = () => {
-    setIsLoading(true)
+    setIsSubmittingDialog(true)
 
     setTimeout(() => {
-      setIsLoading(false)
+      setIsSubmittingDialog(false)
       setIsModalOpen(true)
     }, 1000)
   }
@@ -118,6 +156,7 @@ export default function Dashboard() {
     formState: { errors, isSubmitting },
     setError,
     register,
+    reset,
   } = useForm<CreateWorkspaceSchema>({
     mode: "onChange",
     resolver: zodResolver(createWorkspaceSchema),
@@ -130,8 +169,12 @@ export default function Dashboard() {
   const onSubmit = async (data: CreateWorkspaceSchema) => {
     try {
       const res = await api.post("api/v1/websites", data)
-      await mutate()
+
+      await fetchWebsites()
+
+      reset()
       setIsModalOpen(false)
+
       toast.success(res.data.message)
     } catch (error) {
       handleApiError(error, setError)
@@ -148,197 +191,193 @@ export default function Dashboard() {
             آمدید 👋
           </p>
 
-          {user?.owned_websites.length === 0 && (
+          {!isLoading && (
             <>
-              <Separator />
-              <p className="text-sm text-muted-foreground">
-                هنوز وبسایتی ندارید، برای شروع کار با رایان چت اطلاعات وبسایت
-                خود را تکمیل کنید.
-              </p>
-              <Button
-                size="lg"
-                className={cn("py-2")}
-                onClick={handleCreateWorkspace}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <span>ساخت اولین وبسایت</span>
-                    <Spinner />
-                  </>
-                ) : (
-                  <span>ساخت اولین وبسایت</span>
-                )}
-              </Button>
+              {websites.length === 0 && (
+                <>
+                  <Separator />
+                  <p className="text-sm text-muted-foreground">
+                    هنوز وبسایتی ندارید، برای شروع کار با رایان چت اطلاعات
+                    وبسایت خود را تکمیل کنید.
+                  </p>
+                  <Button
+                    size="lg"
+                    className={cn("py-2")}
+                    onClick={handleCreateWorkspace}
+                    disabled={isSubmittingDialog}
+                  >
+                    {isSubmittingDialog ? (
+                      <>
+                        <span>ساخت اولین وبسایت</span>
+                        <Spinner />
+                      </>
+                    ) : (
+                      <span>ساخت اولین وبسایت</span>
+                    )}
+                  </Button>
+                </>
+              )}
             </>
           )}
         </CardContent>
       </Card>
 
-      {user?.owned_websites?.length === 0 && (
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent className="sm:max-w-106.25 [&>button]:right-auto [&>button]:left-4">
-            <DialogHeader>
-              <DialogTitle>ایجاد وبسایت جدید</DialogTitle>
-              <DialogDescription>
-                مشخصات وبسایت خود را وارد کنید تا راه‌اندازی اولیه انجام شود.
-              </DialogDescription>
-            </DialogHeader>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-106.25 [&>button]:right-auto [&>button]:left-4">
+          <DialogHeader>
+            <DialogTitle>ایجاد وبسایت جدید</DialogTitle>
+            <DialogDescription>
+              مشخصات وبسایت خود را وارد کنید تا راه‌اندازی اولیه انجام شود.
+            </DialogDescription>
+          </DialogHeader>
 
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              id="create-workspace"
-              className="space-y-4 py-4"
-            >
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="title">عنوان وبسایت</FieldLabel>
-                  <Input
-                    id="title"
-                    type="text"
-                    placeholder="وبسایت رایان فناوری"
-                    className={cn("py-5")}
-                    {...register("title")}
-                  />
-                  {errors.title && (
-                    <FieldDescription
-                      className={cn("text-red-500", "text-sm", "text-right")}
-                    >
-                      {errors.title.message}
-                    </FieldDescription>
-                  )}
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="domain">آدرس وبسایت</FieldLabel>
-                  <Input
-                    id="domain"
-                    type="text"
-                    placeholder="rayanfanavari.ir"
-                    className={cn("py-5")}
-                    {...register("domain")}
-                  />
-                  {errors.domain && (
-                    <FieldDescription
-                      className={cn("text-red-500", "text-sm", "text-right")}
-                    >
-                      {errors.domain.message}
-                    </FieldDescription>
-                  )}
-                </Field>
-              </FieldGroup>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            id="create-workspace"
+            className="space-y-4 py-4"
+          >
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="title">عنوان وبسایت</FieldLabel>
+                <Input
+                  id="title"
+                  type="text"
+                  placeholder="وبسایت رایان فناوری"
+                  className={cn("py-5")}
+                  {...register("title")}
+                />
+                {errors.title && (
+                  <FieldDescription
+                    className={cn("text-red-500", "text-sm", "text-right")}
+                  >
+                    {errors.title.message}
+                  </FieldDescription>
+                )}
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="domain">آدرس وبسایت</FieldLabel>
+                <Input
+                  id="domain"
+                  type="text"
+                  placeholder="rayanfanavari.ir"
+                  className={cn("py-5")}
+                  {...register("domain")}
+                />
+                {errors.domain && (
+                  <FieldDescription
+                    className={cn("text-red-500", "text-sm", "text-right")}
+                  >
+                    {errors.domain.message}
+                  </FieldDescription>
+                )}
+              </Field>
+            </FieldGroup>
 
-              <div className="flex justify-end gap-2 pt-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsModalOpen(false)}
-                  className={cn("py-4")}
-                >
-                  انصراف
-                </Button>
-                <Button
-                  disabled={isSubmitting}
-                  type="submit"
-                  form="create-workspace"
-                  className={cn("py-4")}
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      ایجاد وبسایت
-                      <Spinner />
-                    </span>
-                  ) : (
-                    <span>ایجاد وبسایت</span>
-                  )}
-                </Button>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                variant="outline"
+                onClick={() => setIsModalOpen(false)}
+                className={cn("py-4")}
+              >
+                انصراف
+              </Button>
+              <Button
+                disabled={isSubmitting}
+                type="submit"
+                form="create-workspace"
+                className={cn("py-4")}
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    ایجاد وبسایت
+                    <Spinner />
+                  </span>
+                ) : (
+                  <span>ایجاد وبسایت</span>
+                )}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((s) => (
+          <Card key={s.title} className="shadow-sm">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <span>{s.title}</span>
+                <s.icon className="size-4 shrink-0" />
               </div>
-            </form>
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {user?.owned_websites && user?.owned_websites?.length > 0 && (
-        <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((s) => (
-              <Card key={s.title} className="shadow-sm">
-                <CardContent className="p-4 sm:p-6">
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span>{s.title}</span>
-                    <s.icon className="size-4 shrink-0" />
-                  </div>
-                  <div className="mt-2 flex items-baseline gap-2">
-                    <span className="text-2xl font-bold">{s.value}</span>
-                    <span
-                      className={`flex items-center gap-0.5 text-xs font-medium ${
-                        s.up ? "text-green-600" : "text-red-500"
-                      }`}
-                    >
-                      {s.up ? (
-                        <TrendingUp className="size-3" />
-                      ) : (
-                        <TrendingDown className="size-3" />
-                      )}
-                      {s.change}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            <Card className="shadow-sm lg:col-span-2">
-              <CardHeader>
-                <CardTitle className="text-base">فعالیت چت ها</CardTitle>
-              </CardHeader>
-              <CardContent className="px-2 sm:px-6">
-                <div className="w-full overflow-x-auto">
-                  <ActivityChart />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-sm lg:col-span-1">
-              <CardHeader className="flex-row items-center justify-between space-y-0 pb-4">
-                <CardTitle className="text-base">چت های اخیر</CardTitle>
-                <a
-                  href="#"
-                  className="text-xs text-green-600 hover:underline sm:text-sm"
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-2xl font-bold">{s.value}</span>
+                <span
+                  className={`flex items-center gap-0.5 text-xs font-medium ${
+                    s.up ? "text-green-600" : "text-red-500"
+                  }`}
                 >
-                  مشاهده همه
-                </a>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {recentChats.map((c) => (
-                  <div key={c.id} className="flex items-center gap-3">
-                    <Avatar className="size-9 shrink-0">
-                      <AvatarFallback className="text-xs">
-                        {c.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("‌")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm leading-none font-medium">
-                        {c.name}
-                      </p>
-                      <p className="mt-1 truncate text-xs text-muted-foreground">
-                        {c.msg}
-                      </p>
-                    </div>
-                    <div className="shrink-0 text-left">
-                      <span className="text-[11px] text-muted-foreground">
-                        {c.time}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        </>
-      )}
+                  {s.up ? (
+                    <TrendingUp className="size-3" />
+                  ) : (
+                    <TrendingDown className="size-3" />
+                  )}
+                  {s.change}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <Card className="shadow-sm lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-base">فعالیت چت ها</CardTitle>
+          </CardHeader>
+          <CardContent className="px-2 sm:px-6">
+            <div className="w-full overflow-x-auto">
+              <ActivityChart />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-sm lg:col-span-1">
+          <CardHeader className="flex-row items-center justify-between space-y-0 pb-4">
+            <CardTitle className="text-base">چت های اخیر</CardTitle>
+            <a
+              href="#"
+              className="text-xs text-green-600 hover:underline sm:text-sm"
+            >
+              مشاهده همه
+            </a>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {recentChats.map((c) => (
+              <div key={c.id} className="flex items-center gap-3">
+                <Avatar className="size-9 shrink-0">
+                  <AvatarFallback className="text-xs">
+                    {c.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("‌")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm leading-none font-medium">{c.name}</p>
+                  <p className="mt-1 truncate text-xs text-muted-foreground">
+                    {c.msg}
+                  </p>
+                </div>
+                <div className="shrink-0 text-left">
+                  <span className="text-[11px] text-muted-foreground">
+                    {c.time}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

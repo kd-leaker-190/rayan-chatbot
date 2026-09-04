@@ -1,13 +1,11 @@
 import {
   Bell,
   CheckCircle2,
-  Globe,
   LogOut,
   Mail,
   Menu,
   Search,
   Settings,
-  Shield,
   User,
 } from "lucide-react"
 import { Button } from "../ui/button"
@@ -125,16 +123,6 @@ export default function Header({
             <DropdownMenuItem className="cursor-pointer gap-2">
               <User className="size-4 text-muted-foreground" />
               <span>پروفایل کاربری</span>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className="cursor-pointer gap-2">
-              <Globe className="size-4 text-muted-foreground" />
-              <span>مدیریت وب‌سایت‌ها</span>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className="cursor-pointer gap-2">
-              <Shield className="size-4 text-muted-foreground" />
-              <span>نقش‌ها و دسترسی‌ها</span>
             </DropdownMenuItem>
 
             <DropdownMenuItem className="cursor-pointer gap-2">

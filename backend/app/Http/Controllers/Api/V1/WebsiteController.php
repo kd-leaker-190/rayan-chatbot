@@ -19,10 +19,17 @@ class WebsiteController extends Controller
      */
     public function index(Request $request)
     {
-        $websites = $request->user()
-            ->ownedWebsites()
+        $user = $request->user();
+
+        $websites = Website::query()
+            ->where(function ($query) use ($user) {
+                $query->where('owner_id', $user->id)
+                    ->orWhereHas('operators', function ($operatorQuery) use ($user) {
+                        $operatorQuery->where('user_id', $user->id);
+                    });
+            })
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return ApiResponse::success(
             data: WebsiteResource::collection($websites),

@@ -16,7 +16,7 @@ class UserController extends Controller
 {
     public function show(Request $request): JsonResponse
     {
-        $user = $request->user()->load(['ownedWebsites']);
+        $user = $request->user();
         return ApiResponse::success(
             data: new UserResource($user)
         );
@@ -30,7 +30,6 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'lowercase', Rule::unique('users', 'email')->ignore($request->user()->id)],
             'password' => ['nullable', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,jpg,png']
         ]);
 
         if ($validator->fails()) {
@@ -45,17 +44,6 @@ class UserController extends Controller
 
         if ($request->filled('password')) {
             $data['password'] = $request->password;
-        }
-
-        if ($request->hasFile('avatar')) {
-            if ($user->avatar && Storage::disk('local')->exists($user->avatar)) {
-                Storage::disk('local')->delete($user->avatar);
-            }
-
-            $data['avatar'] = $request->file('avatar')->store(
-                'upload/users/avatars',
-                'local'
-            );
         }
 
         $user->update($data);

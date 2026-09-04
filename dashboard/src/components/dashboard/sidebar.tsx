@@ -1,6 +1,7 @@
-import { LayoutDashboard, BotIcon, X } from "lucide-react"
+import { LayoutDashboard, BotIcon, X, Globe } from "lucide-react"
 
 import NavItem from "@/components/dashboard/nav-item"
+import { useLocation } from "react-router-dom"
 
 interface SidebarProps {
   isOpen: boolean
@@ -8,6 +9,9 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const location = useLocation()
+  const currentPath = location.pathname
+
   return (
     <>
       {isOpen && (
@@ -40,8 +44,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <NavItem
             icon={<LayoutDashboard className="size-4" />}
             label="داشبورد"
-            active
             link="/dashboard"
+            active={currentPath === "/dashboard"}
+          />
+
+          <NavItem
+            icon={<Globe className="size-4" />}
+            label="وبسایت‌ها"
+            link="/dashboard/websites"
+            active={currentPath.startsWith("/dashboard/websites")}
           />
         </nav>
       </aside>

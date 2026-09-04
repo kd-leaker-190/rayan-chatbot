@@ -16,6 +16,7 @@ import Register from "@/pages/auth/register"
 import VerifyEmail from "@/pages/dashboard/verify-email"
 import ForgotPassword from "@/pages/auth/forgot-password"
 import PasswordReset from "@/pages/auth/password-reset"
+import Websites from "@/pages/dashboard/websites"
 
 export function App() {
   const { theme } = useTheme()
@@ -36,6 +37,7 @@ export function App() {
           <Route element={<VerifyEmailLayout />}>
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/websites" element={<Websites />} />
             </Route>
           </Route>
         </Route>
