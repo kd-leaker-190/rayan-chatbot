@@ -32,12 +32,12 @@ export default function ForgotPassword() {
 
   const onSubmit = async (values: ForgotPasswordSchema) => {
     try {
-      const res = await api.post<IApiResponse<null>>("/forgot-password", values)
+      const res = await api.post<IApiResponse<null>>("/auth/forgot-password", values)
       toast.success(
         res.data.message || "لینک بازیابی رمز عبور به ایمیل شما ارسال شد."
       )
     } catch (error) {
-      handleApiError(error, setError)
+      handleApiError(error, setError, false)
     }
   }
 
@@ -115,7 +115,7 @@ export default function ForgotPassword() {
         {/* دکمه بازگشت به صفحه ورود */}
         <div className="mt-6 text-center">
           <Link
-            to="/login"
+            to="/authlogin"
             className="text-xs font-semibold text-slate-500 transition-colors hover:text-brand sm:text-sm"
           >
             بازگشت به صفحه ورود

@@ -1,10 +1,11 @@
 import type { IApiErrorResponse } from "@/contracts/api"
+import axios from "axios"
 import Axios, { AxiosError, type InternalAxiosRequestConfig } from "axios"
 import type { FieldPath, FieldValues, UseFormSetError } from "react-hook-form"
 import { toast } from "sonner"
 
 export const api = Axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
   withXSRFToken: true,
 })
@@ -20,9 +21,11 @@ const hasXsrfToken = (): boolean => {
 
 export const getCsrfToken = () => {
   if (!csrfPromise) {
-    csrfPromise = api.get("/sanctum/csrf-cookie").finally(() => {
-      csrfPromise = null
-    })
+    csrfPromise = axios
+      .get(`${import.meta.env.VITE_SERVER_URL}/sanctum/csrf-cookie`)
+      .finally(() => {
+        csrfPromise = null
+      })
   }
 
   return csrfPromise
@@ -53,7 +56,6 @@ api.interceptors.response.use(
       originalRequest._retry = true
 
       await getCsrfToken()
-
       return api(originalRequest)
     }
 

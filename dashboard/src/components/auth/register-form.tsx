@@ -64,7 +64,7 @@ export default function RegisterForm({
 
   const onSubmit = async (data: RegisterSchema) => {
     try {
-      const res = await api.post("/register", data)
+      const res = await api.post("/auth/register", data)
 
       toast.success(res.data.message)
       await mutate()
@@ -235,7 +235,7 @@ export default function RegisterForm({
                 </Button>
                 <FieldDescription className="text-center">
                   حساب کاربری دارید؟{" "}
-                  <Link to="/login" className="text-brand">
+                  <Link to="/auth/login" className="text-brand">
                     ورود به حساب کاربری
                   </Link>
                 </FieldDescription>

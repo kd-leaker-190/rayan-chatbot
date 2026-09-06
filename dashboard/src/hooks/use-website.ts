@@ -5,7 +5,7 @@ import type { IApiResponse } from "@/contracts/api"
 
 export function useWebsite() {
   const { data, isLoading, mutate } = useSWR<IApiResponse<IWebsite[]>>(
-    "/api/v1/websites",
+    "/websites",
     fetcher,
     {
       revalidateOnFocus: false,

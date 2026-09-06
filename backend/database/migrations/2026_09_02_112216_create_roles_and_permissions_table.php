@@ -30,8 +30,6 @@ return new class extends Migration
             $table->string('slug');
             $table->text('description')->nullable();
 
-            $table->boolean('is_system')->default(false);
-
             $table->unique(['website_id', 'slug']);
 
             $table->timestamps();

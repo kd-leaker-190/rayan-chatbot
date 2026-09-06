@@ -25,19 +25,23 @@ export function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<GuestLayout />}>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/password-reset/:token" element={<PasswordReset />} />
+          <Route path="auth">
+            <Route path="register" element={<Register />} />
+            <Route path="login" element={<Login />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="password-reset/:token" element={<PasswordReset />} />
+          </Route>
         </Route>
 
         <Route element={<ProtectedLayout />}>
-          <Route path="/dashboard/verify-email" element={<VerifyEmail />} />
+          <Route path="dashboard">
+            <Route path="verify-email" element={<VerifyEmail />} />
 
-          <Route element={<VerifyEmailLayout />}>
-            <Route element={<DashboardLayout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/dashboard/websites" element={<Websites />} />
+            <Route element={<VerifyEmailLayout />}>
+              <Route element={<DashboardLayout />}>
+                <Route path="" element={<Dashboard />} />
+                <Route path="websites" element={<Websites />} />
+              </Route>
             </Route>
           </Route>
         </Route>

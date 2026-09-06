@@ -51,7 +51,7 @@ export default function CreateWebsiteDialog() {
 
   const onSubmit = async (data: CreateWorkspaceSchema) => {
     try {
-      const res = await api.post("/api/v1/websites", data)
+      const res = await api.post("/websites", data)
 
       await mutate()
 

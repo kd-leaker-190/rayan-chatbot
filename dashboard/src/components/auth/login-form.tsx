@@ -56,7 +56,7 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
 
   const onSubmit = async (data: LoginSchema) => {
     try {
-      const res = await api.post("/login", data)
+      const res = await api.post("/auth/login", data)
 
       toast.success(res.data.message)
       await mutate()
@@ -186,7 +186,7 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
                   </div>
 
                   <Link
-                    to="/forgot-password"
+                    to="/auth/forgot-password"
                     className="text-brand hover:underline"
                   >
                     فراموشی رمز عبور؟
@@ -218,7 +218,7 @@ export default function LoginForm({ className }: React.ComponentProps<"div">) {
                 <FieldDescription className="pt-1 text-center text-sm">
                   حساب کاربری ندارید؟{" "}
                   <Link
-                    to="/register"
+                    to="/auth/register"
                     className="font-semibold text-brand hover:underline"
                   >
                     ایجاد حساب کاربری

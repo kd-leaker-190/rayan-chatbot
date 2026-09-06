@@ -29,7 +29,7 @@ export default function VerifyEmail() {
     if (loading) return
     try {
       setLoading(true)
-      const res = await api.post("/email/verification-notification")
+      const res = await api.post("/auth/email/verification-notification")
       toast.success(
         res.data.message || "لینک تایید مجدداً به ایمیل شما ارسال شد."
       )

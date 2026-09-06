@@ -55,12 +55,12 @@ export default function PasswordReset() {
 
   const onSubmit = async (data: ResetPasswordSchema) => {
     try {
-      const res = await api.post<IApiResponse<null>>("/reset-password", data)
+      const res = await api.post<IApiResponse<null>>("/auth/reset-password", data)
 
       toast.success(
         res.data.message || "رمز عبور با موفقیت تغییر یافت. اکنون وارد شوید."
       )
-      navigate("/login", { replace: true })
+      navigate("/auth/login", { replace: true })
     } catch (err) {
       handleApiError(err, setError)
     }

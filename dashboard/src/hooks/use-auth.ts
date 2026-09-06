@@ -11,7 +11,7 @@ export function useAuth() {
     error,
     isLoading,
     mutate,
-  } = useSWR<IApiResponse<IUser>>("/api/v1/user", fetcher, {
+  } = useSWR<IApiResponse<IUser>>("/user", fetcher, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   })
@@ -20,7 +20,7 @@ export function useAuth() {
 
   const logout = async () => {
     try {
-      const res = await api.post("/logout")
+      const res = await api.post("/auth/logout")
       toast.success(res.data.message || "خروج با موفقیت انجام شد")
 
       mutate(undefined)
