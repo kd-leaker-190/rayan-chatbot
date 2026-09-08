@@ -26,6 +26,16 @@ class Website extends Model
         ];
     }
 
+    public function scopeAccessibleBy($query, $user)
+    {
+        return $query->where(function ($q) use ($user) {
+            $q->where('owner_id', $user->id)
+                ->orWhereHas('operators', function ($operatorQuery) use ($user) {
+                    $operatorQuery->where('user_id', $user->id);
+                });
+        });
+    }
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');

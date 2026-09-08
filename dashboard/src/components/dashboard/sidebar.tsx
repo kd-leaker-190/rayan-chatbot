@@ -2,7 +2,7 @@ import { LayoutDashboard, BotIcon, X, Globe } from "lucide-react"
 
 import NavItem from "@/components/dashboard/nav-item"
 import { useLocation } from "react-router-dom"
-import { useWebsite } from "@/hooks/use-website"
+import { useWebsites } from "@/hooks/use-website"
 
 interface SidebarProps {
   isOpen: boolean
@@ -13,7 +13,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const location = useLocation()
   const currentPath = location.pathname
 
-  const { hasWebsite } = useWebsite()
+  const { hasWebsite } = useWebsites()
 
   return (
     <>

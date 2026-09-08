@@ -4,12 +4,12 @@ import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { api,  handleApiError } from "@/lib/api"
-import { useWebsite } from "@/hooks/use-website"
+import { useWebsites } from "@/hooks/use-website"
 
 import {
-  createWorkspaceSchema,
-  type CreateWorkspaceSchema,
-} from "@/schemas/workspace"
+  createWebsiteSchema,
+  type CreateWebsiteSchema,
+} from "@/schemas/website"
 
 import {
   Dialog,
@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button"
 export default function CreateWebsiteDialog() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { mutate } = useWebsite()
+  const { mutate } = useWebsites()
 
   const {
     handleSubmit,
@@ -40,16 +40,16 @@ export default function CreateWebsiteDialog() {
     setError,
     register,
     reset,
-  } = useForm<CreateWorkspaceSchema>({
+  } = useForm<CreateWebsiteSchema>({
     mode: "onChange",
-    resolver: zodResolver(createWorkspaceSchema),
+    resolver: zodResolver(createWebsiteSchema),
     defaultValues: {
       title: "",
       domain: "",
     },
   })
 
-  const onSubmit = async (data: CreateWorkspaceSchema) => {
+  const onSubmit = async (data: CreateWebsiteSchema) => {
     try {
       const res = await api.post("/websites", data)
 

@@ -29,7 +29,9 @@ class UpdateWebsiteRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('websites', 'domain')->ignore($this->id)
+                Rule::unique('websites', 'domain')->ignore(
+                    $this->route('website')->id
+                )
             ],
         ];
     }

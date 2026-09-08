@@ -10,7 +10,6 @@ use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use App\Models\Website;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class RoleController extends Controller
 {

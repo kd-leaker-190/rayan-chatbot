@@ -22,17 +22,13 @@ class WebsiteController extends Controller
         $user = $request->user();
 
         $websites = Website::query()
-            ->where(function ($query) use ($user) {
-                $query->where('owner_id', $user->id)
-                    ->orWhereHas('operators', function ($operatorQuery) use ($user) {
-                        $operatorQuery->where('user_id', $user->id);
-                    });
-            })
+            ->accessibleBy($user)
             ->latest()
-            ->paginate(10);
+            ->paginate(9)
+            ->withQueryString();
 
         return ApiResponse::success(
-            data: WebsiteResource::collection($websites),
+            data: WebsiteResource::collection($websites)->response()->getData(true),
         );
     }
 
@@ -83,14 +79,7 @@ class WebsiteController extends Controller
     {
         $this->authorize('update', $website);
 
-        $website = DB::transaction(function () use ($request, $website) {
-            $website->update([
-                'title' => $request->validated('title'),
-                'domain' => $request->validated('domain'),
-            ]);
-
-            return $website;
-        });
+        $website->update($request->validated());
 
         return ApiResponse::success(
             data: new WebsiteResource($website),
