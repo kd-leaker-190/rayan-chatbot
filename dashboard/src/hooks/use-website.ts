@@ -1,23 +1,13 @@
 import useSWR from "swr"
-import { api, fetcher } from "@/lib/api"
+import { fetcher } from "@/lib/api"
 import type { IApiResponse, IPaginatedData } from "@/contracts/api"
 
-export function useWebsites(page: number = 1, search: string = "") {
-  const { data, isLoading, mutate } = useSWR<
-    IApiResponse<IPaginatedData<IWebsite>>
-  >(
-    [`/websites`, page, search],
-    ([url, page, search]) =>
-      api
-        .get(url, {
-          params: {
-            page,
-            search: search || undefined,
-          },
-        })
-        .then((res) => res.data),
+export function useWebsites(page: number = 1) {
+  const { data, isLoading, mutate } = useSWR<IApiResponse<IPaginatedData<IWebsite>>>(
+    `/websites?page=${page}`,
+    fetcher,
     {
-      keepPreviousData: true,
+      revalidateOnFocus: false,
     }
   )
 
