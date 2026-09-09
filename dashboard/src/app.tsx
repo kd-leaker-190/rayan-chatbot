@@ -19,7 +19,6 @@ import VerifyEmailPage from "@/pages/dashboard/verify-email"
 import WebsitesPage from "@/pages/dashboard/websites"
 import WebsiteManagementPage from "@/pages/dashboard/websites/domain/management"
 import WebsiteRolesPage from "@/pages/dashboard/websites/roles"
-import CreateWebsiteRolePage from "@/pages/dashboard/websites/roles/create"
 
 export function App() {
   const { theme } = useTheme()
@@ -52,7 +51,6 @@ export function App() {
                   element={<WebsiteManagementPage />}
                 />
                 <Route path="websites/:id/roles" element={<WebsiteRolesPage />} />
-                <Route path="websites/:id/roles/create" element={<CreateWebsiteRolePage />} />
               </Route>
             </Route>
           </Route>

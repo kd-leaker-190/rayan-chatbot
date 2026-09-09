@@ -10,13 +10,13 @@ export function useRoles(page: number = 1, websiteId?: number | string) {
   })
 
   const roles: IRole[] = data?.data?.data ?? []
-  const hasWebsite = roles.length > 0
+  const hasRole = roles.length > 0
   const links = data?.data?.links
   const meta = data?.data?.meta
 
   return {
     roles,
-    hasWebsite,
+    hasRole,
     links,
     meta,
     isLoading,
