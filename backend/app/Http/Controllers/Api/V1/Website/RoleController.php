@@ -57,7 +57,7 @@ class RoleController extends Controller
      */
     public function show(Website $website, Role $role)
     {
-        $this->authorize('view', [$website]);
+        $this->authorize('view', [$role, $website]);
 
         $role->load(['website', 'permissions']);
 

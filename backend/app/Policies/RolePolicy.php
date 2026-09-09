@@ -22,7 +22,7 @@ class RolePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Website $website): Response
+    public function view(User $user, Role $role, Website $website): Response
     {
         return $user->id === $website->owner_id
             ? Response::allow()
