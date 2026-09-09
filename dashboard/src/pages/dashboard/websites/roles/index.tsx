@@ -42,8 +42,6 @@ export default function WebsiteRolesPage() {
 
   const { roles, meta, isLoading } = useRoles(currentPage, websiteId)
 
-  console.log(roles)
-
   const handlePageChange = (newPage: number) => {
     if (
       newPage === currentPage ||
@@ -102,7 +100,7 @@ export default function WebsiteRolesPage() {
         <Button
           nativeButton={false}
           render={
-            <Link to={`/dashboard/websites/${websiteId}/create`}>
+            <Link to={`/dashboard/websites/${websiteId}/roles/create`}>
               ایجاد دسترسی جدید
             </Link>
           }
@@ -184,7 +182,11 @@ export default function WebsiteRolesPage() {
                       className="flex items-center gap-1 border-emerald-500/20 bg-emerald-500/10 text-xs font-normal text-emerald-600 dark:text-emerald-400"
                     >
                       <ShieldCheck />
-                      {!role.website && <span>نقش سیستمی</span>}
+                      {!role.website ? (
+                        <span>نقش سیستمی</span>
+                      ) : (
+                        <span>نقش سفارشی</span>
+                      )}
                     </Badge>
                   </div>
 
@@ -211,7 +213,7 @@ export default function WebsiteRolesPage() {
                 className={`grid ${role.website ? "grid-cols-2" : ""} gap-2 border-t px-4 pt-4 pb-4`}
               >
                 <Button
-                  variant={role.website ? "outline" : "default"}
+                  variant="outline"
                   size="lg"
                   className="text-xs"
                   nativeButton={false}
