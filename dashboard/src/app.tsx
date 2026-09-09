@@ -20,6 +20,7 @@ import WebsitesPage from "@/pages/dashboard/websites"
 import WebsiteManagementPage from "@/pages/dashboard/websites/domain/management"
 import WebsiteRolesPage from "@/pages/dashboard/websites/roles"
 import CreateWebsiteRolePage from "@/pages/dashboard/websites/roles/create"
+import EditWebsiteRolePage from "@/pages/dashboard/websites/roles/edit"
 
 export function App() {
   const { theme } = useTheme()
@@ -60,6 +61,10 @@ export function App() {
                   <Route
                     path=":id/roles/create"
                     element={<CreateWebsiteRolePage />}
+                  />
+                  <Route
+                    path=":id/roles/:roleId/edit"
+                    element={<EditWebsiteRolePage />}
                   />
                 </Route>
               </Route>

@@ -212,21 +212,6 @@ export default function WebsiteRolesPage() {
               <CardFooter
                 className={`grid ${role.website ? "grid-cols-2" : ""} gap-2 border-t px-4 pt-4 pb-4`}
               >
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="text-xs"
-                  nativeButton={false}
-                  render={
-                    <Link
-                      to={`/dashboard/websites/${websiteId}/roles/${role.id}/show`}
-                    >
-                      <Eye className="size-3.5 shrink-0" />
-                      <span>مشاهده</span>
-                    </Link>
-                  }
-                />
-
                 {role.website && (
                   <Button
                     size="lg"
@@ -242,6 +227,21 @@ export default function WebsiteRolesPage() {
                     }
                   />
                 )}
+                
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="text-xs"
+                  nativeButton={false}
+                  render={
+                    <Link
+                      to={`/dashboard/websites/${websiteId}/roles/${role.id}/show`}
+                    >
+                      <Eye className="size-3.5 shrink-0" />
+                      <span>مشاهده</span>
+                    </Link>
+                  }
+                />
               </CardFooter>
             </Card>
           ))}
