@@ -92,7 +92,7 @@ export default function Roles() {
         </div>
 
         <Button size="lg">
-          <Link to={`/dashboard/roles/${websiteId}/create`}>
+          <Link to={`/dashboard/websites/${websiteId}/roles/create`}>
             ایجاد دسترسی جدید
           </Link>
         </Button>
