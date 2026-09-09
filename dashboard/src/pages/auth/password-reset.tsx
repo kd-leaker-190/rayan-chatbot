@@ -18,7 +18,7 @@ import { Spinner } from "@/components/ui/spinner"
 
 import chatbotImage from "@/assets/images/chatbot.png"
 
-export default function PasswordReset() {
+export default function PasswordResetPage() {
   const params = useParams<{ token?: string }>()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()

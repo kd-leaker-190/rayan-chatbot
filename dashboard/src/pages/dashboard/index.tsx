@@ -9,7 +9,7 @@ import Stats from "@/components/dashboard/widgets/stats"
 import Chart from "@/components/dashboard/widgets/chart"
 import RecentChats from "@/components/dashboard/widgets/recent-chats"
 
-export default function Dashboard() {
+export default function DashboardPage() {
   const { user } = useAuth()
   const { hasWebsite, isLoading } = useWebsites()
 

@@ -15,9 +15,7 @@ class PermissionController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $permissions = Permission::with(['roles'])
-            ->latest()
-            ->get();
+        $permissions = Permission::with(['roles'])->get();
 
         return ApiResponse::success(
             data: PermissionResource::collection($permissions),

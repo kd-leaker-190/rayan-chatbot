@@ -50,7 +50,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-export default function WebsiteManagement() {
+export default function WebsiteManagementPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
@@ -298,7 +298,7 @@ export default function WebsiteManagement() {
             {isSubmitting ? (
               <>
                 <Spinner className="h-4 w-4" />
-                <span>در حال ذخیره...</span>
+                <span>ذخیره اطلاعات</span>
               </>
             ) : (
               <>

@@ -10,15 +10,16 @@ import VerifyEmailLayout from "@/components/layouts/verify-email-layout"
 import { DashboardLayout } from "@/components/layouts/dashboard-layout"
 
 // Pages
-import Login from "@/pages/auth/login"
-import Dashboard from "@/pages/dashboard"
-import Register from "@/pages/auth/register"
-import VerifyEmail from "@/pages/dashboard/verify-email"
-import ForgotPassword from "@/pages/auth/forgot-password"
-import PasswordReset from "@/pages/auth/password-reset"
-import Websites from "@/pages/dashboard/websites"
-import WebsiteManagement from "@/pages/dashboard/websites/settings/domain"
-import Roles from "@/pages/dashboard/websites/roles"
+import RegisterPage from "@/pages/auth/register"
+import LoginPage from "@/pages/auth/login"
+import ForgotPasswordPage from "@/pages/auth/forgot-password"
+import PasswordResetPage from "@/pages/auth/password-reset"
+import DashboardPage from "@/pages/dashboard"
+import VerifyEmailPage from "@/pages/dashboard/verify-email"
+import WebsitesPage from "@/pages/dashboard/websites"
+import WebsiteManagementPage from "@/pages/dashboard/websites/domain/management"
+import WebsiteRolesPage from "@/pages/dashboard/websites/roles"
+import CreateWebsiteRolePage from "@/pages/dashboard/websites/roles/create"
 
 export function App() {
   const { theme } = useTheme()
@@ -28,23 +29,30 @@ export function App() {
       <Routes>
         <Route element={<GuestLayout />}>
           <Route path="auth">
-            <Route path="register" element={<Register />} />
-            <Route path="login" element={<Login />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route path="password-reset/:token" element={<PasswordReset />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="forgot-password" element={<ForgotPasswordPage />} />
+            <Route
+              path="password-reset/:token"
+              element={<PasswordResetPage />}
+            />
           </Route>
         </Route>
 
         <Route element={<ProtectedLayout />}>
           <Route path="dashboard">
-            <Route path="verify-email" element={<VerifyEmail />} />
+            <Route path="verify-email" element={<VerifyEmailPage />} />
 
             <Route element={<VerifyEmailLayout />}>
               <Route element={<DashboardLayout />}>
-                <Route path="" element={<Dashboard />} />
-                <Route path="websites" element={<Websites />} />
-                <Route path="websites/:id/management" element={<WebsiteManagement />} />
-                <Route path="websites/:id/roles" element={<Roles />} />
+                <Route path="" element={<DashboardPage />} />
+                <Route path="websites" element={<WebsitesPage />} />
+                <Route
+                  path="websites/:id/management"
+                  element={<WebsiteManagementPage />}
+                />
+                <Route path="websites/:id/roles" element={<WebsiteRolesPage />} />
+                <Route path="websites/:id/roles/create" element={<CreateWebsiteRolePage />} />
               </Route>
             </Route>
           </Route>

@@ -16,7 +16,7 @@ import { Spinner } from "@/components/ui/spinner"
 
 import chatbotImage from "@/assets/images/chatbot.png"
 
-export default function ForgotPassword() {
+export default function ForgotPasswordPage() {
   const {
     register,
     handleSubmit,

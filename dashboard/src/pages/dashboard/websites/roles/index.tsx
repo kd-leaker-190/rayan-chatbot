@@ -25,7 +25,7 @@ import {
   PaginationLink,
 } from "@/components/ui/pagination"
 
-export default function Roles() {
+export default function WebsiteRolesPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentPage = Number(searchParams.get("page")) || 1
 

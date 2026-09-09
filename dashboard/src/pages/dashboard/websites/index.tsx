@@ -46,8 +46,7 @@ import {
 import CreateWebsiteDialog from "@/components/dashboard/widgets/create-website-dialog"
 import { useState } from "react"
 
-export default function Websites() {
-  // ۱. مدیریت صفحه از طریق Query Params برای حفظ وضعیت در رفرش
+export default function WebsitesPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentPage = Number(searchParams.get("page")) || 1
 
@@ -75,10 +74,9 @@ export default function Websites() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  // ۲. تولید هوشمند شماره صفحات و نقاط برش (Ellipsis)
   const paginationRange = useMemo(() => {
     const totalPages = meta?.last_page || 1
-    const delta = 1 // تعداد صفحات قابل نمایش در چپ و راست صفحه فعال
+    const delta = 1
     const range: (number | string)[] = []
 
     for (
@@ -120,7 +118,6 @@ export default function Websites() {
 
       <Separator />
 
-      {/* لیست کارت‌ها یا لودینگ اسکلتون */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         {isLoading &&
           Array.from({ length: 6 }).map((_, index) => (
@@ -315,7 +312,6 @@ export default function Websites() {
           ))}
       </div>
 
-      {/* حالت خالی (Empty State) */}
       {!isLoading && websites?.length === 0 && (
         <Card className="flex flex-col items-center justify-center p-8 text-center">
           <div className="rounded-full bg-muted p-4">
@@ -335,7 +331,6 @@ export default function Websites() {
         </Card>
       )}
 
-      {/* Pagination بهبود یافته */}
       {!isLoading && meta && meta.last_page > 1 && (
         <div className="flex flex-col items-center justify-between gap-4 py-4 sm:flex-row">
           <p className="text-xs text-muted-foreground">
@@ -353,7 +348,6 @@ export default function Websites() {
 
           <Pagination className="mx-0 w-auto">
             <PaginationContent>
-              {/* شماره صفحات */}
               {paginationRange.map((pageItem, index) => {
                 if (typeof pageItem === "string") {
                   return (

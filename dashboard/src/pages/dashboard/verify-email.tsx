@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 
 import chatbotImage from "@/assets/images/chatbot.png"
 
-export default function VerifyEmail() {
+export default function VerifyEmailPage() {
   const { user, isEmailVerified } = useAuth()
   const [loading, setLoading] = useState(false)
 

@@ -37,3 +37,20 @@ export function useRole(websiteId?: string | number, roleId?: string | number) {
     mutate,
   }
 }
+
+export function usePermissions() {
+  const { data, isLoading } = useSWR<IApiResponse<IPermission[]>>(
+    "/permissions",
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  )
+
+  const permissions = data?.data ?? []
+
+  return {
+    permissions,
+    isLoading,
+  }
+}
