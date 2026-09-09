@@ -9,21 +9,15 @@ use App\Http\Requests\Website\Role\UpdateRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use App\Models\Website;
-use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, Website $website)
+    public function index(Website $website)
     {
-        if ($request->user()->id !== $website->owner_id) {
-            return ApiResponse::error(
-                message: 'داده موردنظر شما یافت نشد',
-                code: 404
-            );
-        }
+        $this->authorize('viewAny', [Role::class, $website]);
 
         $roles = Role::with(['website', 'permissions', 'operators'])
             ->where('website_id', $website->id)
@@ -42,12 +36,7 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request, Website $website)
     {
-        if ($request->user()->id !== $website->owner_id) {
-            return ApiResponse::error(
-                message: 'داده موردنظر شما یافت نشد',
-                code: 404
-            );
-        }
+        $this->authorize('create', [Role::class, $website]);
 
         $data = $request->validated();
 
@@ -66,14 +55,9 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Website $website, Role $role)
+    public function show(Website $website, Role $role)
     {
-        if ($request->user()->id !== $website->owner_id) {
-            return ApiResponse::error(
-                message: 'داده موردنظر شما یافت نشد',
-                code: 404
-            );
-        }
+        $this->authorize('view', [$website]);
 
         $role->load(['website', 'permissions']);
 
@@ -87,19 +71,7 @@ class RoleController extends Controller
      */
     public function update(UpdateRoleRequest $request, Website $website, Role $role)
     {
-        if ($request->user()->id !== $website->owner_id) {
-            return ApiResponse::error(
-                message: 'داده موردنظر شما یافت نشد',
-                code: 404
-            );
-        }
-
-        if ($role->website_id !== $website->id) {
-            return ApiResponse::error(
-                message: 'داده موردنظر شما یافت نشد',
-                code: 404
-            );
-        }
+        $this->authorize('update', [$role, $website]);
 
         $data = $request->validated();
 
@@ -117,21 +89,9 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Website $website, Role $role)
+    public function destroy(Website $website, Role $role)
     {
-        if ($request->user()->id !== $website->owner_id) {
-            return ApiResponse::error(
-                message: 'داده موردنظر شما یافت نشد',
-                code: 404
-            );
-        }
-
-        if ($role->website_id !== $website->id) {
-            return ApiResponse::error(
-                message: 'داده موردنظر شما یافت نشد',
-                code: 404
-            );
-        }
+        $this->authorize('delete', [$role, $website]);
 
         $role->delete();
 
