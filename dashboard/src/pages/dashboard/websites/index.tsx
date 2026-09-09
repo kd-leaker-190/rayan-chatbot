@@ -220,7 +220,6 @@ export default function WebsitesPage() {
                           render={
                             <Link
                               to={`/dashboard/websites/${website.id}/roles`}
-                              className="flex items-center gap-2"
                             >
                               <UserShield className="ml-2 h-4 w-4" />
                               <span>سطوح دسترسی</span>

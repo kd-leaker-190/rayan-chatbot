@@ -18,7 +18,7 @@ import DashboardPage from "@/pages/dashboard"
 import VerifyEmailPage from "@/pages/dashboard/verify-email"
 import WebsitesPage from "@/pages/dashboard/websites"
 import WebsiteManagementPage from "@/pages/dashboard/websites/domain/management"
-import WebsiteRolesPage from "@/pages/dashboard/websites/roles"
+import WebsiteRolesPage from "./pages/dashboard/websites/roles"
 
 export function App() {
   const { theme } = useTheme()
@@ -45,12 +45,17 @@ export function App() {
             <Route element={<VerifyEmailLayout />}>
               <Route element={<DashboardLayout />}>
                 <Route path="" element={<DashboardPage />} />
+
                 <Route path="websites" element={<WebsitesPage />} />
                 <Route
                   path="websites/:id/management"
                   element={<WebsiteManagementPage />}
                 />
-                <Route path="websites/:id/roles" element={<WebsiteRolesPage />} />
+
+                <Route
+                  path="websites/:id/roles"
+                  element={<WebsiteRolesPage />}
+                />
               </Route>
             </Route>
           </Route>

@@ -1,9 +1,17 @@
 import { useMemo } from "react"
+
 import { Link, useParams, useSearchParams } from "react-router-dom"
 
 import { useRoles } from "@/hooks/use-roles"
 
-import { Globe, Users, Plus, ShieldCheck, PencilLine, Eye } from "lucide-react"
+import {
+  Globe,
+  Plus,
+  ShieldCheck,
+  UserShield,
+  PencilLine,
+  Eye,
+} from "lucide-react"
 
 import { Separator } from "@/components/ui/separator"
 import {
@@ -83,19 +91,22 @@ export default function WebsiteRolesPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            نقش ها و سطوح دسترسی
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight">سطوح دسترسی</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            این قسمت مربوط به مدیریت نقش ها و سطوح دسترسی وبسایت شما می باشد.
+            این قسمت مربوط به مدیریت سطوح دسترسی و نقش های وبسایت شما می باشد.
+            ازین قسمت می توانید نقش های جدید ایجاد کنید و به اوپراتورهای خود
+            اختصاص دهید.
           </p>
         </div>
 
-        <Button size="lg">
-          <Link to={`/dashboard/websites/${websiteId}/roles/create`}>
-            ایجاد دسترسی جدید
-          </Link>
-        </Button>
+        <Button
+          nativeButton={false}
+          render={
+            <Link to={`/dashboard/websites/${websiteId}/create`}>
+              ایجاد دسترسی جدید
+            </Link>
+          }
+        />
       </div>
 
       <Separator />
@@ -152,7 +163,7 @@ export default function WebsiteRolesPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex min-w-0 items-center gap-2.5">
                       <div className="shrink-0 rounded-xl border border-primary/20 bg-primary/10 p-2.5 text-primary">
-                        <Globe className="h-5 w-5" />
+                        <ShieldCheck className="h-5 w-5" />
                       </div>
                       <div className="min-w-0">
                         <CardTitle className="truncate text-base font-bold transition-colors group-hover:text-primary">
@@ -172,33 +183,35 @@ export default function WebsiteRolesPage() {
                       variant="secondary"
                       className="flex items-center gap-1 border-emerald-500/20 bg-emerald-500/10 text-xs font-normal text-emerald-600 dark:text-emerald-400"
                     >
-                      <ShieldCheck className="h-3 w-3" />
-                      {!role?.website ? "نقش سیستمی" : "نقش سفارشی"}
+                      <ShieldCheck />
+                      {!role.website && <span>نقش سیستمی</span>}
                     </Badge>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 rounded-lg border border-border/50 bg-muted/40 p-2.5 text-xs">
                     <div className="flex items-center gap-2">
-                      <Users className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                      <span className="text-muted-foreground">
-                        تعداد دسترسی‌ها:
+                      <UserShield className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                      <span className="text-muted-foreground">اپراتورها:</span>
+                      <span className="font-semibold">
+                        {role.operators?.length}
                       </span>
-                      <span className="font-semibold">{role.permissions.length}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Users className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                      <span className="text-muted-foreground">
-                        تعداد اوپراتورها:
+                      <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                      <span className="text-muted-foreground">دسترسی‌ها:</span>
+                      <span className="font-semibold">
+                        {role.permissions.length}
                       </span>
-                      <span className="font-semibold">{role?.operators?.length}</span>
                     </div>
                   </div>
                 </CardContent>
               </div>
 
-              <CardFooter className="grid grid-cols-2 gap-2 border-t px-4 pt-4 pb-4">
+              <CardFooter
+                className={`grid ${role.website ? "grid-cols-2" : ""} gap-2 border-t px-4 pt-4 pb-4`}
+              >
                 <Button
-                  variant="outline"
+                  variant={role.website ? "outline" : "default"}
                   size="lg"
                   className="text-xs"
                   nativeButton={false}
@@ -207,24 +220,26 @@ export default function WebsiteRolesPage() {
                       to={`/dashboard/websites/${websiteId}/roles/${role.id}/show`}
                     >
                       <Eye className="size-3.5 shrink-0" />
-                      <span>مشاهده نقش</span>
+                      <span>مشاهده</span>
                     </Link>
                   }
                 />
 
-                <Button
-                  size="lg"
-                  className="min-w-0 gap-1.5 text-xs"
-                  nativeButton={false}
-                  render={
-                    <Link
-                      to={`/dashboard/websites/${websiteId}/roles/${role.id}/edit`}
-                    >
-                      <PencilLine className="size-3.5 shrink-0" />
-                      <span>ویرایش نقش</span>
-                    </Link>
-                  }
-                />
+                {role.website && (
+                  <Button
+                    size="lg"
+                    className="min-w-0 gap-1.5 text-xs"
+                    nativeButton={false}
+                    render={
+                      <Link
+                        to={`/dashboard/websites/${websiteId}/roles/${role.id}/edit`}
+                      >
+                        <PencilLine className="size-3.5 shrink-0" />
+                        <span>ویرایش</span>
+                      </Link>
+                    }
+                  />
+                )}
               </CardFooter>
             </Card>
           ))}
@@ -235,16 +250,14 @@ export default function WebsiteRolesPage() {
           <div className="rounded-full bg-muted p-4">
             <Globe className="h-8 w-8 text-muted-foreground" />
           </div>
-          <h3 className="mt-4 text-base font-semibold">
-            هیچ وب‌سایتی یافت نشد
-          </h3>
+          <h3 className="mt-4 text-base font-semibold">هیچ نقشی یافت نشد</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            هنوز وب‌سایتی اضافه نکرده‌اید. با کلیک بر روی دکمه زیر اولین وب‌سایت
-            خود را ایجاد کنید.
+            هنوز نقشی اضافه نکرده‌اید. با کلیک بر روی دکمه زیر اولین وب‌سایت خود
+            را ایجاد کنید.
           </p>
           <Button className="mt-4 gap-2" size="lg">
             <Plus className="h-4 w-4" />
-            افزودن وب‌سایت جدید
+            افزودن نقش جدید
           </Button>
         </Card>
       )}
@@ -261,7 +274,7 @@ export default function WebsiteRolesPage() {
               {Math.min(meta.current_page * meta.per_page, meta.total)}
             </span>{" "}
             از <span className="font-medium text-foreground">{meta.total}</span>{" "}
-            وب‌سایت
+            نقش
           </p>
 
           <Pagination className="mx-0 w-auto">
