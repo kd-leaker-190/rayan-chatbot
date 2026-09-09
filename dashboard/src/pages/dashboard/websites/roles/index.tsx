@@ -1,20 +1,9 @@
 import { useMemo } from "react"
-import { Link, useSearchParams } from "react-router-dom"
-import { useWebsites } from "@/hooks/use-website"
+import { Link, useParams, useSearchParams } from "react-router-dom"
 
-import {
-  Globe,
-  ExternalLink,
-  Settings,
-  MessageSquare,
-  Users,
-  Plus,
-  MoreVertical,
-  ShieldCheck,
-  Copy,
-  Check,
-  UserShield,
-} from "lucide-react"
+import { useRoles } from "@/hooks/use-roles"
+
+import { Globe, Users, Plus, ShieldCheck, PencilLine, Eye } from "lucide-react"
 
 import { Separator } from "@/components/ui/separator"
 import {
@@ -29,13 +18,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
@@ -43,22 +25,16 @@ import {
   PaginationLink,
 } from "@/components/ui/pagination"
 
-import CreateWebsiteDialog from "@/components/dashboard/widgets/create-website-dialog"
-import { useState } from "react"
-
-export default function Websites() {
-  // ۱. مدیریت صفحه از طریق Query Params برای حفظ وضعیت در رفرش
+export default function Roles() {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentPage = Number(searchParams.get("page")) || 1
 
-  const { websites, meta, isLoading } = useWebsites(currentPage)
-  const [copiedId, setCopiedId] = useState<number | null>(null)
+  const params = useParams()
+  const { id: websiteId } = params
 
-  const handleCopyDomain = (id: number, domain: string) => {
-    navigator.clipboard.writeText(domain)
-    setCopiedId(id)
-    setTimeout(() => setCopiedId(null), 2000)
-  }
+  const { roles, meta, isLoading } = useRoles(currentPage, websiteId)
+
+  console.log(roles)
 
   const handlePageChange = (newPage: number) => {
     if (
@@ -75,10 +51,9 @@ export default function Websites() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  // ۲. تولید هوشمند شماره صفحات و نقاط برش (Ellipsis)
   const paginationRange = useMemo(() => {
     const totalPages = meta?.last_page || 1
-    const delta = 1 // تعداد صفحات قابل نمایش در چپ و راست صفحه فعال
+    const delta = 1
     const range: (number | string)[] = []
 
     for (
@@ -108,19 +83,23 @@ export default function Websites() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">وب‌سایت‌ها</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            نقش ها و سطوح دسترسی
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            این قسمت مربوط به مدیریت وبسایت‌هایی می‌باشد که شما مالک آن هستید یا
-            دسترسی اپراتور به آن را دارید.
+            این قسمت مربوط به مدیریت نقش ها و سطوح دسترسی وبسایت شما می باشد.
           </p>
         </div>
 
-        <CreateWebsiteDialog />
+        <Button size="lg">
+          <Link to={`/dashboard/roles/${websiteId}/create`}>
+            ایجاد دسترسی جدید
+          </Link>
+        </Button>
       </div>
 
       <Separator />
 
-      {/* لیست کارت‌ها یا لودینگ اسکلتون */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         {isLoading &&
           Array.from({ length: 6 }).map((_, index) => (
@@ -163,9 +142,9 @@ export default function Websites() {
           ))}
 
         {!isLoading &&
-          websites?.map((website) => (
+          roles?.map((role) => (
             <Card
-              key={website.id}
+              key={role.id}
               className="group relative flex flex-col justify-between border bg-card/60 backdrop-blur-sm transition-all duration-200 hover:border-primary/40 hover:shadow-md"
             >
               <div>
@@ -177,116 +156,41 @@ export default function Websites() {
                       </div>
                       <div className="min-w-0">
                         <CardTitle className="truncate text-base font-bold transition-colors group-hover:text-primary">
-                          {website.title}
+                          {role.name}
                         </CardTitle>
                         <CardDescription className="mt-0.5 flex items-center gap-1.5 truncate text-xs">
-                          <span className="truncate">{website.domain}</span>
-                          <button
-                            onClick={() =>
-                              handleCopyDomain(website.id, website.domain)
-                            }
-                            className="p-0.5 text-muted-foreground transition-colors hover:text-foreground"
-                            title="کپی دامنه"
-                          >
-                            {copiedId === website.id ? (
-                              <Check className="h-3 w-3 text-emerald-500" />
-                            ) : (
-                              <Copy className="h-3 w-3" />
-                            )}
-                          </button>
+                          <p className="truncate">{role.description}</p>
                         </CardDescription>
                       </div>
                     </div>
-
-                    <DropdownMenu>
-                      <DropdownMenuTrigger
-                        render={
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-muted-foreground"
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        }
-                      />
-                      <DropdownMenuContent
-                        align="end"
-                        className="w-44 text-right"
-                      >
-                        <DropdownMenuItem className="cursor-pointer">
-                          <Settings className="ml-2 h-4 w-4" />
-                          تنظیمات ویجت
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="cursor-pointer"
-                          render={
-                            <Link
-                              to={`/dashboard/websites/${website.id}/roles`}
-                              className="flex items-center gap-2"
-                            >
-                              <UserShield className="ml-2 h-4 w-4" />
-                              <span>سطوح دسترسی</span>
-                            </Link>
-                          }
-                        />
-                        <DropdownMenuItem className="cursor-pointer">
-                          <Users className="ml-2 h-4 w-4" />
-                          مدیریت اپراتورها
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="cursor-pointer"
-                          onClick={() =>
-                            window.open(`https://${website.domain}`, "_blank")
-                          }
-                        >
-                          <ExternalLink className="ml-2 h-4 w-4" />
-                          مشاهده سایت
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
                   </div>
                 </CardHeader>
 
                 <CardContent className="space-y-4 pt-1 pb-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge
-                      variant="outline"
-                      className="gap-1 border-amber-500/20 bg-amber-500/10 text-xs font-normal text-amber-600 dark:text-amber-400"
+                      variant="secondary"
+                      className="flex items-center gap-1 border-emerald-500/20 bg-emerald-500/10 text-xs font-normal text-emerald-600 dark:text-emerald-400"
                     >
                       <ShieldCheck className="h-3 w-3" />
-                      مالک
+                      {!role?.website ? "نقش سیستمی" : "نقش سفارشی"}
                     </Badge>
-
-                    {website.status === "active" ? (
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1 border-emerald-500/20 bg-emerald-500/10 text-xs font-normal text-emerald-600 dark:text-emerald-400"
-                      >
-                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-                        فعال
-                      </Badge>
-                    ) : (
-                      <Badge
-                        variant="secondary"
-                        className="bg-muted text-xs font-normal text-muted-foreground"
-                      >
-                        غیرفعال
-                      </Badge>
-                    )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 rounded-lg border border-border/50 bg-muted/40 p-2.5 text-xs">
                     <div className="flex items-center gap-2">
                       <Users className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                      <span className="text-muted-foreground">اپراتورها:</span>
-                      <span className="font-semibold">0</span>
+                      <span className="text-muted-foreground">
+                        تعداد دسترسی‌ها:
+                      </span>
+                      <span className="font-semibold">{role.permissions.length}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MessageSquare className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                      <span className="text-muted-foreground">مکالمات:</span>
-                      <span className="font-semibold">0</span>
+                      <Users className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                      <span className="text-muted-foreground">
+                        تعداد اوپراتورها:
+                      </span>
+                      <span className="font-semibold">{role?.operators?.length}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -299,24 +203,34 @@ export default function Websites() {
                   className="text-xs"
                   nativeButton={false}
                   render={
-                    <Link to={`/dashboard/websites/${website.id}/management`}>
-                      <Settings className="size-3.5 shrink-0" />
-                      <span>مدیریت</span>
+                    <Link
+                      to={`/dashboard/websites/${websiteId}/roles/${role.id}/show`}
+                    >
+                      <Eye className="size-3.5 shrink-0" />
+                      <span>مشاهده نقش</span>
                     </Link>
                   }
                 />
 
-                <Button size="lg" className="min-w-0 gap-1.5 text-xs">
-                  <MessageSquare className="size-3.5 shrink-0" />
-                  <span>پنل گفتگو</span>
-                </Button>
+                <Button
+                  size="lg"
+                  className="min-w-0 gap-1.5 text-xs"
+                  nativeButton={false}
+                  render={
+                    <Link
+                      to={`/dashboard/websites/${websiteId}/roles/${role.id}/edit`}
+                    >
+                      <PencilLine className="size-3.5 shrink-0" />
+                      <span>ویرایش نقش</span>
+                    </Link>
+                  }
+                />
               </CardFooter>
             </Card>
           ))}
       </div>
 
-      {/* حالت خالی (Empty State) */}
-      {!isLoading && websites?.length === 0 && (
+      {!isLoading && roles?.length === 0 && (
         <Card className="flex flex-col items-center justify-center p-8 text-center">
           <div className="rounded-full bg-muted p-4">
             <Globe className="h-8 w-8 text-muted-foreground" />
@@ -335,7 +249,6 @@ export default function Websites() {
         </Card>
       )}
 
-      {/* Pagination بهبود یافته */}
       {!isLoading && meta && meta.last_page > 1 && (
         <div className="flex flex-col items-center justify-between gap-4 py-4 sm:flex-row">
           <p className="text-xs text-muted-foreground">
@@ -353,7 +266,6 @@ export default function Websites() {
 
           <Pagination className="mx-0 w-auto">
             <PaginationContent>
-              {/* شماره صفحات */}
               {paginationRange.map((pageItem, index) => {
                 if (typeof pageItem === "string") {
                   return (

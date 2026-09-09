@@ -18,6 +18,7 @@ import ForgotPassword from "@/pages/auth/forgot-password"
 import PasswordReset from "@/pages/auth/password-reset"
 import Websites from "@/pages/dashboard/websites"
 import WebsiteManagement from "@/pages/dashboard/websites/settings/domain"
+import Roles from "@/pages/dashboard/websites/roles"
 
 export function App() {
   const { theme } = useTheme()
@@ -43,6 +44,7 @@ export function App() {
                 <Route path="" element={<Dashboard />} />
                 <Route path="websites" element={<Websites />} />
                 <Route path="websites/:id/management" element={<WebsiteManagement />} />
+                <Route path="websites/:id/roles" element={<Roles />} />
               </Route>
             </Route>
           </Route>

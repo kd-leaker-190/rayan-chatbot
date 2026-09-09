@@ -1,0 +1,39 @@
+import useSWR from "swr"
+import { fetcher } from "@/lib/api"
+import type { IApiResponse, IPaginatedData } from "@/contracts/api"
+
+export function useRoles(page: number = 1, websiteId?: number | string) {
+  const { data, isLoading, mutate } = useSWR<
+    IApiResponse<IPaginatedData<IRole>>
+  >(`/websites/${websiteId}/roles?page=${page}`, fetcher, {
+    revalidateOnFocus: false,
+  })
+
+  const roles: IRole[] = data?.data?.data ?? []
+  const hasWebsite = roles.length > 0
+  const links = data?.data?.links
+  const meta = data?.data?.meta
+
+  return {
+    roles,
+    hasWebsite,
+    links,
+    meta,
+    isLoading,
+    mutate,
+  }
+}
+
+export function useRole(websiteId?: string | number, roleId?: string | number) {
+  const { data, error, isLoading, mutate } = useSWR<IApiResponse<IRole>>(
+    `/websites/${websiteId}/roles/${roleId}`,
+    fetcher
+  )
+
+  return {
+    role: data?.data,
+    isLoading,
+    isError: error,
+    mutate,
+  }
+}

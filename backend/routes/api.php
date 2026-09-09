@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\PermissionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\WebsiteController;
@@ -15,6 +16,8 @@ Route::prefix('v1')->group(function () {
         });
 
         Route::apiResource('websites', WebsiteController::class);
+
+        Route::get('permissions', PermissionController::class);
         Route::apiResource('websites/{website}/roles', RoleController::class);
     });
 });

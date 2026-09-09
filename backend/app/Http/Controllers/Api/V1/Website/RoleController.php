@@ -25,15 +25,15 @@ class RoleController extends Controller
             );
         }
 
-        $roles = Role::with(['website', 'permissions'])->where(function ($query) use ($website) {
-            $query->where('website_id', $website->id)
-                ->orWhereNull('website_id');
-        })
+        $roles = Role::with(['website', 'permissions', 'operators'])
+            ->where('website_id', $website->id)
+            ->orWhereNull('website_id')
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return ApiResponse::success(
-            data: RoleResource::collection($roles),
+            data: RoleResource::collection($roles)->response()->getData(true),
         );
     }
 
