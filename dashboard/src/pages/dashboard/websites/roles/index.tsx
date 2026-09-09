@@ -210,7 +210,7 @@ export default function WebsiteRolesPage() {
               </div>
 
               <CardFooter
-                className={`grid ${role.website ? "grid-cols-2" : ""} gap-2 border-t px-4 pt-4 pb-4`}
+                className={`grid ${role.website ? "md:grid-cols-2" : ""} gap-2 border-t px-4 pt-4 pb-4`}
               >
                 {role.website && (
                   <Button
@@ -227,7 +227,7 @@ export default function WebsiteRolesPage() {
                     }
                   />
                 )}
-                
+
                 <Button
                   variant="outline"
                   size="lg"

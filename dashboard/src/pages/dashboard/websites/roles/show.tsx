@@ -1,15 +1,9 @@
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { useForm, Controller } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { toast } from "sonner"
 
-import { api, handleApiError } from "@/lib/api"
 import { usePermissions, useRole } from "@/hooks/use-roles"
 import { useWebsite } from "@/hooks/use-website"
 
-import { updateRoleSchema, type UpdateRoleSchema } from "@/schemas/roles"
-
-import { ArrowRight, Save, ShieldCheck, Text } from "lucide-react"
+import { ArrowRight, ShieldCheck, Text } from "lucide-react"
 
 import {
   Card,
@@ -26,55 +20,14 @@ import { Spinner } from "@/components/ui/spinner"
 import { Separator } from "@/components/ui/separator"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Field, FieldLabel } from "@/components/ui/field"
-import { useEffect } from "react"
 
-export default function EditWebsiteRolePage() {
+export default function ShowWebsiteRolePage() {
   const { id: websiteId, roleId } = useParams<{ id: string; roleId: string }>()
   const navigate = useNavigate()
 
   const { permissions, isLoading: isPermissionLoading } = usePermissions()
   const { website, isLoading: isWebsiteLoading } = useWebsite(websiteId)
   const { role } = useRole(websiteId, roleId)
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting, errors, isDirty },
-    register,
-    setError,
-    control,
-    reset,
-  } = useForm<UpdateRoleSchema>({
-    mode: "onChange",
-    resolver: zodResolver(updateRoleSchema),
-    defaultValues: {
-      name: role?.name,
-      description: role?.description,
-      permission_ids: [],
-    },
-  })
-
-  const onSubmit = async (data: UpdateRoleSchema) => {
-    try {
-      const res = await api.put(`/websites/${websiteId}/roles/${roleId}`, data)
-      toast.success(res.data.message || "نقش موردنظر شما با موفقیت ویرایش شد.")
-      reset()
-      navigate(`/dashboard/websites/${websiteId}/roles`)
-    } catch (error) {
-      handleApiError(error, setError)
-    }
-  }
-
-  useEffect(() => {
-    if (role) {
-      reset({
-        name: role.name || "",
-        description: role.description || "",
-        permission_ids: role.permissions
-          ? role.permissions.map((p) => p.id)
-          : [],
-      })
-    }
-  }, [role, reset])
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -94,11 +47,13 @@ export default function EditWebsiteRolePage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold tracking-tight">
-                ویرایش اطلاعات دسترسی
+                اطلاعات دسترسی
               </h1>
             </div>
 
-            {isWebsiteLoading && <Spinner className="h-4 w-4 mt-2 text-brand" />}
+            {isWebsiteLoading && (
+              <Spinner className="mt-2 h-4 w-4 text-brand" />
+            )}
             {!isWebsiteLoading && (
               <p className="mt-0.5 text-xs text-muted-foreground">
                 شناسه سایت: #{website?.id} • دامنه: {website?.domain}
@@ -131,33 +86,23 @@ export default function EditWebsiteRolePage() {
         </CardHeader>
 
         <CardContent className="space-y-6 pt-2">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            id="update-website"
-            className="space-y-6"
-          >
+          <div className="space-y-6">
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-xs font-medium">
-                  نام دسترسی <span className="text-destructive">*</span>
+                  نام دسترسی
                 </Label>
 
                 <div className="relative">
                   <ShieldCheck className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
-                    {...register("name")}
                     id="name"
                     type="text"
-                    placeholder="مدیریت وبسایت‌ها"
                     className="pr-9"
+                    disabled={true}
+                    value={role?.name ?? ""}
                   />
                 </div>
-
-                {errors.name && (
-                  <p className="text-xs text-destructive">
-                    {errors.name.message}
-                  </p>
-                )}
               </div>
 
               <div className="space-y-2">
@@ -168,19 +113,13 @@ export default function EditWebsiteRolePage() {
                 <div className="relative">
                   <Text className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
-                    {...register("description")}
                     id="description"
                     type="text"
-                    placeholder="اجازه دسترسی به بخش وبسایت‌ها"
                     className="pr-9"
+                    disabled={true}
+                    value={role?.description ?? ""}
                   />
                 </div>
-
-                {errors.description && (
-                  <p className="text-xs text-destructive">
-                    {errors.description.message}
-                  </p>
-                )}
               </div>
             </div>
 
@@ -196,27 +135,13 @@ export default function EditWebsiteRolePage() {
                   key={permission.id}
                   className="flex min-w-0 cursor-pointer items-center gap-2.5"
                 >
-                  <Controller
-                    control={control}
-                    name="permission_ids"
-                    render={({ field }) => (
-                      <Checkbox
-                        id={`permission-${permission.id}`}
-                        checked={field.value?.includes(permission.id)}
-                        onCheckedChange={(checked) => {
-                          const current = field.value || []
-                          if (checked) {
-                            field.onChange([...current, permission.id])
-                          } else {
-                            field.onChange(
-                              current.filter(
-                                (id: number) => id !== permission.id
-                              )
-                            )
-                          }
-                        }}
-                      />
-                    )}
+                  <Checkbox
+                    id={`permission-${permission.id}`}
+                    disabled={true}
+                    checked={
+                      role?.permissions?.some((p) => p.id === permission.id) ??
+                      false
+                    }
                   />
                   <FieldLabel
                     htmlFor={`permission-${permission.id}`}
@@ -228,7 +153,7 @@ export default function EditWebsiteRolePage() {
                 </Field>
               ))}
             </div>
-          </form>
+          </div>
         </CardContent>
 
         <CardFooter className="flex items-center justify-between border-t bg-muted/20 px-6 py-4">
@@ -237,28 +162,8 @@ export default function EditWebsiteRolePage() {
             variant="ghost"
             size="lg"
             onClick={() => navigate(`/dashboard/websites/${websiteId}/roles`)}
-            disabled={isSubmitting}
           >
-            انصراف
-          </Button>
-
-          <Button
-            type="submit"
-            form="update-website"
-            size="lg"
-            disabled={isSubmitting || !isDirty}
-          >
-            {isSubmitting ? (
-              <>
-                <Spinner className="h-4 w-4" />
-                <span>ذخیره اطلاعات</span>
-              </>
-            ) : (
-              <>
-                <Save className="h-4 w-4" />
-                <span>ذخیره تغییرات</span>
-              </>
-            )}
+            بازگشت
           </Button>
         </CardFooter>
       </Card>
