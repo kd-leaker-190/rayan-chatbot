@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 #[Fillable([
     'title',
@@ -26,14 +27,9 @@ class Website extends Model
         ];
     }
 
-    public function scopeAccessibleBy($query, $user)
+    public function scopeAccessibleBy(Builder $query, User $user): Builder
     {
-        return $query->where(function ($q) use ($user) {
-            $q->where('owner_id', $user->id)
-                ->orWhereHas('operators', function ($operatorQuery) use ($user) {
-                    $operatorQuery->where('user_id', $user->id);
-                });
-        });
+        return $query->where('owner_id', $user->id);
     }
 
     public function owner(): BelongsTo

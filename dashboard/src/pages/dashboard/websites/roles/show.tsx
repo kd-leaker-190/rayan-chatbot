@@ -158,8 +158,7 @@ export default function ShowWebsiteRolePage() {
               </CardTitle>
 
               <CardDescription className="mt-1 text-xs leading-relaxed">
-                نام دسترسی موردنظر را به همراه یک توضیح مختصر (اختیاری) وارد
-                کنید و در ادامه دسترسی های موردنیاز به داشبورد را انتخاب کنید.
+                در این قسمت نقش ها و دسترسی های مربوطه را مشاهده می کنید.
               </CardDescription>
             </div>
           </div>
@@ -173,15 +172,19 @@ export default function ShowWebsiteRolePage() {
                   نام دسترسی
                 </Label>
 
-                <p className="text-secondary-foreground text-xs">{role?.name}</p>
+                <p className="text-xs text-secondary-foreground">
+                  {role?.name}
+                </p>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-xs font-medium">
-                  توضیح دسترسی (اختیاری)
+                  توضیح دسترسی
                 </Label>
 
-                <p className="text-secondary-foreground text-xs">{role?.description}</p>
+                <p className="text-xs text-secondary-foreground">
+                  {role?.description}
+                </p>
               </div>
             </div>
 

@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Website\StoreWebsiteRequest;
 use App\Http\Requests\Website\UpdateWebsiteRequest;
 use App\Http\Resources\WebsiteResource;
+use App\Models\Operator;
+use App\Models\Role;
 use App\Models\Website;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,10 +21,10 @@ class WebsiteController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
+        $this->authorize('viewAny', Website::class);
 
         $websites = Website::query()
-            ->accessibleBy($user)
+            ->accessibleBy($request->user())
             ->latest()
             ->paginate(9)
             ->withQueryString();
@@ -38,6 +40,8 @@ class WebsiteController extends Controller
      */
     public function store(StoreWebsiteRequest $request)
     {
+        $this->authorize('create', Website::class);
+
         $user = $request->user();
 
         $website = DB::transaction(function () use ($user, $request) {
@@ -48,6 +52,16 @@ class WebsiteController extends Controller
 
             $website->owner()->associate($user);
             $website->save();
+
+            $ownerRole = Role::owner()->firstOrFail();
+
+            $operator = new Operator();
+
+            $operator->website()->associate($website);
+            $operator->user()->associate($user);
+            $operator->role()->associate($ownerRole);
+
+            $operator->save();
 
             return $website;
         });

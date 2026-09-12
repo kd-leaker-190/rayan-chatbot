@@ -59,6 +59,18 @@ class Role extends Model
         return strtr($value, $map);
     }
 
+    public function scopeGlobal($query)
+    {
+        return $query->whereNull('website_id');
+    }
+
+    public function scopeOwner($query)
+    {
+        return $query
+            ->whereNull('website_id')
+            ->where('slug', 'owner');
+    }
+
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(

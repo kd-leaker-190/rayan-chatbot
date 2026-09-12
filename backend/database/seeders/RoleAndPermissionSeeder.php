@@ -16,68 +16,325 @@ class RoleAndPermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            'websites' => [
-                'index' => [
-                    'name' => 'مشاهده لیست وبسایت‌ها',
-                    'slug' => 'websites.index',
-                    'description' => 'قابلیت مشاهده تمام وبسایت‌های ساخته‌شده در داشبورد',
-                ],
-                'show' => [
-                    'name' => 'مشاهده اطلاعات وبسایت',
-                    'slug' => 'websites.show',
-                    'description' => 'قابلیت مشاهده اطلاعات وبسایت‌های ساخته‌شده در داشبورد',
-                ],
-                'store' => [
-                    'name' => 'ایجاد وبسایت',
-                    'slug' => 'websites.store',
-                    'description' => 'قابلیت ایجاد وبسایت در داشبورد',
-                ],
-                'update' => [
-                    'name' => 'ویرایش اطلاعات وبسایت',
-                    'slug' => 'websites.update',
-                    'description' => 'قابلیت ویرایش اطلاعات وبسایت در داشبورد',
-                ],
-                'destroy' => [
-                    'name' => 'حذف وبسایت',
-                    'slug' => 'websites.destroy',
-                    'description' => 'قابلیت حذف وبسایت در داشبورد',
-                ],
+            /*
+            |--------------------------------------------------------------------------
+            | Account / Website
+            |--------------------------------------------------------------------------
+            |
+            | These permissions belong to the user's account context,
+            | not to an operator inside a website.
+            |
+            */
+
+            /*
+            |--------------------------------------------------------------------------
+            | Operators
+            |--------------------------------------------------------------------------
+            */
+
+            'operators.index' => [
+                'name' => 'مشاهده اپراتورها',
+                'description' => 'قابلیت مشاهده لیست اپراتورهای وبسایت',
             ],
-        ];
-        $roles = [
-            'website-manager' => [
-                'name' => 'مدیر وبسایت‌ها',
-                'slug' => 'website-manager',
-                'description' => 'قابلیت مدیریت تمام امکانات بخش وبسایت‌ها در داشبورد',
-                'permissions' => [
-                    'websites.index',
-                    'websites.show',
-                    'websites.store',
-                    'websites.update',
-                    'websites.destroy',
-                ],
+
+            'operators.show' => [
+                'name' => 'مشاهده اپراتور',
+                'description' => 'قابلیت مشاهده اطلاعات یک اپراتور',
+            ],
+
+            'operators.store' => [
+                'name' => 'افزودن اپراتور',
+                'description' => 'قابلیت دعوت و افزودن اپراتور جدید به وبسایت',
+            ],
+
+            'operators.update' => [
+                'name' => 'ویرایش اپراتور',
+                'description' => 'قابلیت ویرایش اطلاعات و وضعیت اپراتور',
+            ],
+
+            'operators.destroy' => [
+                'name' => 'حذف اپراتور',
+                'description' => 'قابلیت حذف اپراتور از وبسایت',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Roles
+            |--------------------------------------------------------------------------
+            */
+
+            'roles.index' => [
+                'name' => 'مشاهده نقش‌ها',
+                'description' => 'قابلیت مشاهده نقش‌های وبسایت',
+            ],
+
+            'roles.show' => [
+                'name' => 'مشاهده نقش',
+                'description' => 'قابلیت مشاهده جزئیات یک نقش',
+            ],
+
+            'roles.store' => [
+                'name' => 'ایجاد نقش',
+                'description' => 'قابلیت ایجاد نقش سفارشی برای وبسایت',
+            ],
+
+            'roles.update' => [
+                'name' => 'ویرایش نقش',
+                'description' => 'قابلیت ویرایش نقش سفارشی وبسایت',
+            ],
+
+            'roles.destroy' => [
+                'name' => 'حذف نقش',
+                'description' => 'قابلیت حذف نقش سفارشی وبسایت',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Visitors
+            |--------------------------------------------------------------------------
+            */
+
+            'visitors.index' => [
+                'name' => 'مشاهده بازدیدکنندگان',
+                'description' => 'قابلیت مشاهده لیست بازدیدکنندگان وبسایت',
+            ],
+
+            'visitors.show' => [
+                'name' => 'مشاهده بازدیدکننده',
+                'description' => 'قابلیت مشاهده اطلاعات بازدیدکننده',
+            ],
+
+            'visitors.update' => [
+                'name' => 'ویرایش بازدیدکننده',
+                'description' => 'قابلیت ویرایش اطلاعات بازدیدکننده',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Conversations
+            |--------------------------------------------------------------------------
+            */
+
+            'conversations.index' => [
+                'name' => 'مشاهده گفتگوها',
+                'description' => 'قابلیت مشاهده لیست گفتگوهای وبسایت',
+            ],
+
+            'conversations.show' => [
+                'name' => 'مشاهده گفتگو',
+                'description' => 'قابلیت مشاهده جزئیات یک گفتگو',
+            ],
+
+            'conversations.accept' => [
+                'name' => 'پذیرش گفتگو',
+                'description' => 'قابلیت پذیرش یک گفتگوی جدید',
+            ],
+
+            'conversations.reject' => [
+                'name' => 'رد گفتگو',
+                'description' => 'قابلیت رد کردن یک گفتگوی جدید',
+            ],
+
+            'conversations.close' => [
+                'name' => 'بستن گفتگو',
+                'description' => 'قابلیت بستن یک گفتگوی فعال',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Messages
+            |--------------------------------------------------------------------------
+            */
+
+            'messages.index' => [
+                'name' => 'مشاهده پیام‌ها',
+                'description' => 'قابلیت مشاهده پیام‌های گفتگو',
+            ],
+
+            'messages.show' => [
+                'name' => 'مشاهده پیام',
+                'description' => 'قابلیت مشاهده یک پیام',
+            ],
+
+            'messages.store' => [
+                'name' => 'ارسال پیام',
+                'description' => 'قابلیت ارسال پیام در گفتگو',
+            ],
+
+            'messages.update' => [
+                'name' => 'ویرایش پیام',
+                'description' => 'قابلیت ویرایش پیام',
+            ],
+
+            'messages.destroy' => [
+                'name' => 'حذف پیام',
+                'description' => 'قابلیت حذف پیام',
             ],
         ];
 
-        foreach ($permissions as $actions) {
-            foreach ($actions as $permissionData) {
-                Permission::updateOrCreate(
-                    [
-                        'slug' => $permissionData['slug'],
-                    ],
-                    [
-                        'name' => $permissionData['name'],
-                        'description' => $permissionData['description'] ?? null,
-                    ]
-                );
-            }
+        foreach ($permissions as $slug => $permissionData) {
+            Permission::updateOrCreate(
+                ['slug' => $slug],
+                [
+                    'name' => $permissionData['name'],
+                    'description' => $permissionData['description'] ?? null,
+                ]
+            );
         }
 
-        foreach ($roles as $roleData) {
+        $roles = [
+            /*
+            |--------------------------------------------------------------------------
+            | Owner
+            |--------------------------------------------------------------------------
+            */
+
+            'owner' => [
+                'name' => 'مالک وبسایت',
+                'description' => 'دسترسی کامل به امکانات مدیریتی و عملیاتی وبسایت',
+                'permissions' => [
+                    'operators.index',
+                    'operators.show',
+                    'operators.store',
+                    'operators.update',
+                    'operators.destroy',
+
+                    'roles.index',
+                    'roles.show',
+                    'roles.store',
+                    'roles.update',
+                    'roles.destroy',
+
+                    'visitors.index',
+                    'visitors.show',
+                    'visitors.update',
+
+                    'conversations.index',
+                    'conversations.show',
+                    'conversations.accept',
+                    'conversations.reject',
+                    'conversations.close',
+
+                    'messages.index',
+                    'messages.show',
+                    'messages.store',
+                    'messages.update',
+                    'messages.destroy',
+                ],
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Operator Admin
+            |--------------------------------------------------------------------------
+            */
+
+            'operator-admin' => [
+                'name' => 'مدیر اپراتورها',
+                'description' => 'مدیریت اپراتورها و دسترسی‌های وبسایت',
+                'permissions' => [
+                    'operators.index',
+                    'operators.show',
+                    'operators.store',
+                    'operators.update',
+                    'operators.destroy',
+
+                    'roles.index',
+                    'roles.show',
+                    'roles.store',
+                    'roles.update',
+                    'roles.destroy',
+
+                    'visitors.index',
+                    'visitors.show',
+
+                    'conversations.index',
+                    'conversations.show',
+                    'conversations.accept',
+                    'conversations.reject',
+                    'conversations.close',
+
+                    'messages.index',
+                    'messages.show',
+                    'messages.store',
+                ],
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Operator
+            |--------------------------------------------------------------------------
+            */
+
+            'operator' => [
+                'name' => 'اپراتور',
+                'description' => 'دسترسی استاندارد برای مدیریت گفتگو با بازدیدکنندگان',
+                'permissions' => [
+                    'visitors.index',
+                    'visitors.show',
+
+                    'conversations.index',
+                    'conversations.show',
+                    'conversations.accept',
+                    'conversations.reject',
+                    'conversations.close',
+
+                    'messages.index',
+                    'messages.show',
+                    'messages.store',
+                ],
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Support
+            |--------------------------------------------------------------------------
+            */
+
+            'support' => [
+                'name' => 'پشتیبان',
+                'description' => 'دسترسی لازم برای پاسخگویی به بازدیدکنندگان',
+                'permissions' => [
+                    'visitors.index',
+                    'visitors.show',
+
+                    'conversations.index',
+                    'conversations.show',
+                    'conversations.accept',
+
+                    'messages.index',
+                    'messages.show',
+                    'messages.store',
+                ],
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Viewer
+            |--------------------------------------------------------------------------
+            */
+
+            'viewer' => [
+                'name' => 'مشاهده‌گر',
+                'description' => 'دسترسی فقط برای مشاهده اطلاعات',
+                'permissions' => [
+                    'visitors.index',
+                    'visitors.show',
+
+                    'conversations.index',
+                    'conversations.show',
+
+                    'messages.index',
+                    'messages.show',
+                ],
+            ],
+        ];
+
+        foreach ($roles as $slug => $roleData) {
             $role = Role::updateOrCreate(
                 [
                     'website_id' => null,
-                    'slug' => $roleData['slug'],
+                    'slug' => $slug,
                 ],
                 [
                     'name' => $roleData['name'],
