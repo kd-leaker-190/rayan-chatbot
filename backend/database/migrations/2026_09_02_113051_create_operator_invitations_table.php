@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('website_id')->constrained('websites')->cascadeOnDelete();
             $table->foreignId('role_id')->constrained('roles')->restrictOnDelete();
             $table->foreignId('invited_by_user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('accepted_by_user_id')->nullable()->constrained('users')->nullOnDelete();
 
             $table->string('email');
 
