@@ -30,6 +30,31 @@
         }
     ],
     "paths": {
+        "/api/v1/permissions": {
+            "get": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Get all of the system permissions (just for viewing)",
+                "description": "Returns permissions list",
+                "operationId": "d94690f577bcf78171b48b0ca681bf88",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoleResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                }
+            }
+        },
         "/api/v1/websites/{website}/roles/{role}": {
             "get": {
                 "tags": [
@@ -917,6 +942,21 @@
                     }
                 ]
             },
+            "PermissionResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/Permission"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "ResetPasswordResponse": {
                 "allOf": [
                     {
@@ -987,6 +1027,43 @@
                     "data": {
                         "type": "object",
                         "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Permission": {
+                "title": "Permission",
+                "description": "Permission model",
+                "required": [
+                    "name",
+                    "slug"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "مدیریت وبسایت"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "create-website"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "قابلیت مدیریت وبسایت های داشبورد"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-08-26 9:17:20"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-08-26 9:17:20"
                     }
                 },
                 "type": "object"
@@ -1130,6 +1207,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Permission",
+            "description": "Permission"
+        },
         {
             "name": "Role",
             "description": "Role"
