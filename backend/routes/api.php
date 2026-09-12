@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\V1\PermissionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\WebsiteController;
+use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\Website\RoleController;
+use App\Http\Controllers\Api\V1\Website\OperatorController;
 
 Route::prefix('v1')->group(function () {
     require __DIR__ . '/auth.php';
@@ -19,5 +20,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('permissions', PermissionController::class);
         Route::apiResource('websites/{website}/roles', RoleController::class);
+
+        Route::apiResource('websites/{website}/operators', OperatorController::class)->except(['store']);
     });
 });
