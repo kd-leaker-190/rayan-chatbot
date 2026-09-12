@@ -2,6 +2,7 @@ import { useMemo } from "react"
 
 import { Link, useParams, useSearchParams } from "react-router-dom"
 
+import { truncateText } from "@/lib/utils"
 import { useRoles } from "@/hooks/use-roles"
 
 import {
@@ -168,7 +169,7 @@ export default function WebsiteRolesPage() {
                           {role.name}
                         </CardTitle>
                         <CardDescription className="mt-0.5 flex items-center gap-1.5 truncate text-xs">
-                          <p className="truncate">{role.description}</p>
+                          <p className="truncate">{truncateText(role.description, 40)}</p>
                         </CardDescription>
                       </div>
                     </div>

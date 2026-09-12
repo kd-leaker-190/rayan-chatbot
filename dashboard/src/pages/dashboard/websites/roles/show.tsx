@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { usePermissions, useRole } from "@/hooks/use-roles"
 import { useWebsite } from "@/hooks/use-website"
 
-import { ArrowRight, ShieldCheck, Text } from "lucide-react"
+import { ArrowRight, ShieldCheck } from "lucide-react"
 
 import {
   Card,
@@ -14,7 +14,6 @@ import {
   CardFooter,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Spinner } from "@/components/ui/spinner"
 import { Separator } from "@/components/ui/separator"
@@ -99,45 +98,49 @@ export default function ShowWebsiteRolePage() {
           </div>
         </div>
 
-        <AlertDialog open={isDialogOpen}>
-          <AlertDialogTrigger
-            onClick={() => setIsDialogOpen(!isDialogOpen)}
-            render={
-              <Button
-                variant="destructive"
-                className="rounded-lg border-border/70 shadow-sm"
-              />
-            }
-          >
-            حذف دسترسی
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>آیا از این اقدام مطمئن هستید؟</AlertDialogTitle>
-              <AlertDialogDescription className="text-right">
-                دسترسی پاک شده قابل بازگشت نمی باشد، لطفا اگر اطلاعات مهمی مرتبط
-                با این دسترسی دارید در حذف دقت کنید.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>انصراف</AlertDialogCancel>
-              <AlertDialogAction
-                disabled={deleting}
-                onClick={handleDeleteRole}
-                variant="destructive"
-              >
-                {deleting ? (
-                  <span className="flex items-center gap-2">
-                    بله حذف کن
-                    <Spinner />
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-2">بله حذف کن</span>
-                )}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {role?.website && (
+          <AlertDialog open={isDialogOpen}>
+            <AlertDialogTrigger
+              onClick={() => setIsDialogOpen(!isDialogOpen)}
+              render={
+                <Button
+                  variant="destructive"
+                  className="rounded-lg border-border/70 shadow-sm"
+                />
+              }
+            >
+              حذف دسترسی
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  آیا از این اقدام مطمئن هستید؟
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-right">
+                  دسترسی پاک شده قابل بازگشت نمی باشد، لطفا اگر اطلاعات مهمی
+                  مرتبط با این دسترسی دارید در حذف دقت کنید.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>انصراف</AlertDialogCancel>
+                <AlertDialogAction
+                  disabled={deleting}
+                  onClick={handleDeleteRole}
+                  variant="destructive"
+                >
+                  {deleting ? (
+                    <span className="flex items-center gap-2">
+                      بله حذف کن
+                      <Spinner />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">بله حذف کن</span>
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
 
       <Separator />
@@ -170,16 +173,7 @@ export default function ShowWebsiteRolePage() {
                   نام دسترسی
                 </Label>
 
-                <div className="relative">
-                  <ShieldCheck className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    id="name"
-                    type="text"
-                    className="pr-9"
-                    disabled={true}
-                    value={role?.name ?? ""}
-                  />
-                </div>
+                <p className="text-secondary-foreground text-xs">{role?.name}</p>
               </div>
 
               <div className="space-y-2">
@@ -187,16 +181,7 @@ export default function ShowWebsiteRolePage() {
                   توضیح دسترسی (اختیاری)
                 </Label>
 
-                <div className="relative">
-                  <Text className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    id="description"
-                    type="text"
-                    className="pr-9"
-                    disabled={true}
-                    value={role?.description ?? ""}
-                  />
-                </div>
+                <p className="text-secondary-foreground text-xs">{role?.description}</p>
               </div>
             </div>
 
