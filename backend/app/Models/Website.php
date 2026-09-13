@@ -46,4 +46,9 @@ class Website extends Model
     {
         return $this->hasMany(Operator::class);
     }
+
+    public function invitations(): HasMany
+    {
+        return  $this->hasMany(OperatorInvitation::class, 'website_id');
+    }
 }

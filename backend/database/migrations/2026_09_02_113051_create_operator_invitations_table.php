@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('invited_by_user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('accepted_by_user_id')->nullable()->constrained('users')->nullOnDelete();
 
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email');
 
             $table->string('token_hash', 64)->unique();

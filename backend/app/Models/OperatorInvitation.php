@@ -2,12 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Hidden([
     'token_hash'
+])]
+
+#[Fillable([
+    'first_name',
+    'last_name',
+    'email',
+    'token_hash',
+    'expires_at'
 ])]
 class OperatorInvitation extends Model
 {
