@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Helpers\ApiResponse;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
+use App\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\User\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -22,31 +19,22 @@ class UserController extends Controller
         );
     }
 
-    public function update(Request $request): JsonResponse
+    public function update(UpdateUserRequest $request): JsonResponse
     {
         $user = $request->user();
+        $data = $request->validated();
 
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'lowercase', Rule::unique('users', 'email')->ignore($request->user()->id)],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        if ($validator->fails()) {
-            return ApiResponse::error(
-                errors: $validator->errors(),
-                message: 'خطایی در اعتبارسنجی اطلاعات رخ داد، لطفا دوباره امتحان کنید.',
-                code: 422
-            );
+        if ($request->email !== $user->email) {
+            $data['email_verified_at'] = null;
         }
 
-        $data = $validator->validated();
-
-        if ($request->filled('password')) {
-            $data['password'] = $request->password;
-        }
+        $emailChanged = $request->email !== $user->email;
 
         $user->update($data);
+
+        if ($emailChanged) {
+            $user->sendEmailVerificationNotification();
+        }
 
         return ApiResponse::success(
             data: new UserResource($user->fresh()),
