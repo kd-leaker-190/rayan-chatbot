@@ -10,6 +10,11 @@ interface IRole {
   operators?: IOperator[]
 }
 
+interface IRoleOption {
+  id: number
+  name: string
+}
+
 interface IPermission {
   id: number
   name: string

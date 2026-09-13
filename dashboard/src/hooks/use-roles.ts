@@ -24,6 +24,24 @@ export function useRoles(page: number = 1, websiteId?: number | string) {
   }
 }
 
+export function useRoleOptions(websiteId?: number | string) {
+  const { data, isLoading, mutate } = useSWR<IApiResponse<IRole[]>>(
+    websiteId
+      ? `/websites/${websiteId}/roles/options`
+      : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  )
+
+  return {
+    roles: data?.data ?? [],
+    isLoading,
+    mutate,
+  }
+}
+
 export function useRole(websiteId?: string | number, roleId?: string | number) {
   const { data, error, isLoading, mutate } = useSWR<IApiResponse<IRole>>(
     `/websites/${websiteId}/roles/${roleId}`,

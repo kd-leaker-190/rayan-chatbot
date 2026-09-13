@@ -28,7 +28,7 @@ export function useOperators(page: number = 1, websiteId?: string | number) {
 
 export function useOperator(websiteId?: string | number, operatorId?: string | number) {
   const { data, error, isLoading, mutate } = useSWR<IApiResponse<IOperator>>(
-    `/website/${websiteId}/operators/${operatorId}`,
+    `/websites/${websiteId}/operators/${operatorId}`,
     fetcher
   )
 

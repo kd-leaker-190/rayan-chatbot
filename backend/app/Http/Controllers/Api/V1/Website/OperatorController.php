@@ -9,8 +9,10 @@ use App\Models\Operator;
 use App\Models\Role;
 use App\Models\Website;
 use App\Policies\OperatorPolicy;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 class OperatorController extends Controller
@@ -61,26 +63,34 @@ class OperatorController extends Controller
     {
         $this->authorize('update', [Operator::class, $operator, $website]);
 
-        $request->validate([
+        $validated = $request->validate([
             'status' => ['sometimes', 'in:active,inactive,suspended'],
-            'role_id' => ['nullable', 'required', 'exists:roles,id'],
+            'role_id' => [
+                'required',
+                Rule::exists('roles', 'id')->where(function (Builder $query) use ($website) {
+                    $query->where('website_id', $website->id)
+                        ->orWhereNull('website_id');
+                }),
+            ],
         ]);
 
-        $operator = DB::transaction(function () use ($request, $website, $operator) {
-            if ($request->filled('role_id')) {
-                $role = Role::owner()->firstOrFail();
+        $operator = DB::transaction(function () use ($operator, $validated) {
+            $role = Role::findOrFail($validated['role_id']);
 
-                $operator->role()->associate($role);
+            $operator->role()->associate($role);
+
+            if (isset($validated['status'])) {
+                $operator->status = $validated['status'];
             }
 
-            $operator->update($request->only(['status']));
+            $operator->save();
 
-            return $operator;
+            return $operator->fresh(['role']);
         });
 
         return ApiResponse::success(
             data: new OperatorResource($operator),
-            message: 'وضعیت اوپراتور با موفقیت به روزرسانی شد.',
+            message: 'اوپراتور با موفقیت به‌روزرسانی شد.',
         );
     }
 
