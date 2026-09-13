@@ -53,6 +53,8 @@ export default function WebsitesPage() {
   const { websites, meta, isLoading } = useWebsites(currentPage)
   const [copiedId, setCopiedId] = useState<number | null>(null)
 
+  const [openDialog, setOpenDialog] = useState(false)
+
   const handleCopyDomain = (id: number, domain: string) => {
     navigator.clipboard.writeText(domain)
     setCopiedId(id)
@@ -113,7 +115,7 @@ export default function WebsitesPage() {
           </p>
         </div>
 
-        <CreateWebsiteDialog />
+        <CreateWebsiteDialog openDialog={openDialog} />
       </div>
 
       <Separator />
@@ -330,7 +332,11 @@ export default function WebsitesPage() {
             هنوز وب‌سایتی اضافه نکرده‌اید. با کلیک بر روی دکمه زیر اولین وب‌سایت
             خود را ایجاد کنید.
           </p>
-          <Button className="mt-4 gap-2" size="lg">
+          <Button
+            className="mt-4 gap-2"
+            size="lg"
+            onClick={() => setOpenDialog(true)}
+          >
             <Plus className="h-4 w-4" />
             افزودن وب‌سایت جدید
           </Button>

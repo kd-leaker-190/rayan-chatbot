@@ -8,7 +8,6 @@ import {
   Globe,
   Plus,
   ShieldCheck,
-  UserShield,
   PencilLine,
   Eye,
   User,
@@ -205,11 +204,6 @@ export default function WebsiteOperatorsPage() {
 
                   <div className="grid grid-cols-2 gap-2 rounded-lg border border-border/50 bg-muted/40 p-2.5 text-xs">
                     <div className="flex items-center gap-2">
-                      <UserShield className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                      <span className="text-muted-foreground">اپراتورها:</span>
-                      <span className="font-semibold"></span>
-                    </div>
-                    <div className="flex items-center gap-2">
                       <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                       <span className="text-muted-foreground">نقش:</span>
                       <span className="font-semibold">
@@ -221,7 +215,7 @@ export default function WebsiteOperatorsPage() {
               </div>
 
               <CardFooter
-                className={`grid md:grid-cols-2 gap-2 border-t px-4 pt-4 pb-4`}
+                className={`grid gap-2 border-t px-4 pt-4 pb-4 md:grid-cols-2`}
               >
                 <Button
                   size="lg"

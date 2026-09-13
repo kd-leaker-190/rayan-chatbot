@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 
-import { api,  handleApiError } from "@/lib/api"
+import { api, handleApiError } from "@/lib/api"
 import { useWebsites } from "@/hooks/use-website"
 
 import {
@@ -29,8 +29,12 @@ import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@/components/ui/button"
 
-export default function CreateWebsiteDialog() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+interface IProps {
+  openDialog?: boolean
+}
+
+export default function CreateWebsiteDialog({ openDialog }: IProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const { mutate } = useWebsites()
 
@@ -56,7 +60,7 @@ export default function CreateWebsiteDialog() {
       await mutate()
 
       reset()
-      setIsModalOpen(false)
+      setIsDialogOpen(false)
 
       toast.success(res.data.message || "وبسایت شما با موفقیت ایجاد شد.")
     } catch (error) {
@@ -65,7 +69,7 @@ export default function CreateWebsiteDialog() {
   }
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <Dialog open={isDialogOpen || openDialog} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
         render={
           <Button size="lg" className="mt-2">
@@ -125,7 +129,7 @@ export default function CreateWebsiteDialog() {
             <Button
               variant="outline"
               type="button"
-              onClick={() => setIsModalOpen(false)}
+              onClick={() => setIsDialogOpen(false)}
               className="py-4"
             >
               انصراف
