@@ -24,9 +24,18 @@ class OperatorPolicy
      */
     public function view(User $user, Operator $operator, Website $website): Response
     {
-        return self::belongsToWebsite($operator, $website) && (self::isOwner($user, $website) || $user->can('operators.show', $operator))
+        return self::belongsToWebsite($operator, $website)
+        && (
+            self::isOwner($user, $website)
+            || (
+                !self::isOwnerOperator($operator, $website)
+                && $user->can('operators.show', $operator)
+            )
+        )
             ? Response::allow()
-            : Response::denyAsNotFound(message: 'داده موردنظر یافت نشد.');
+            : Response::denyAsNotFound(
+                message: 'داده موردنظر یافت نشد.'
+            );
     }
 
     /**
@@ -34,9 +43,18 @@ class OperatorPolicy
      */
     public function update(User $user, Operator $operator, Website $website): Response
     {
-        return self::belongsToWebsite($operator, $website) && (self::isOwner($user, $website) || $user->can('operators.update', $operator))
+        return self::belongsToWebsite($operator, $website)
+        && (
+            self::isOwner($user, $website)
+            || (
+                !self::isOwnerOperator($operator, $website)
+                && $user->can('operators.update', $operator)
+            )
+        )
             ? Response::allow()
-            : Response::denyAsNotFound(message: 'داده موردنظر یافت نشد.');
+            : Response::denyAsNotFound(
+                message: 'داده موردنظر یافت نشد.'
+            );
     }
 
     /**
@@ -44,9 +62,12 @@ class OperatorPolicy
      */
     public function delete(User $user, Operator $operator, Website $website): Response
     {
-        return self::belongsToWebsite($operator, $website) && (self::isOwner($user, $website) || $user->can('operators.delete', $operator))
+        return
+            self::belongsToWebsite($operator, $website) && (self::isOwner($user, $website) || (!self::isOwnerOperator($operator, $website) && $user->can('operators.delete', $operator)))
             ? Response::allow()
-            : Response::denyAsNotFound(message: 'داده موردنظر یافت نشد.');
+            : Response::denyAsNotFound(
+                message: 'داده موردنظر یافت نشد.'
+            );
     }
 
     public static function isOwner(User $user, Website $website): bool
@@ -57,5 +78,10 @@ class OperatorPolicy
     public static function belongsToWebsite(Operator $operator, Website $website): bool
     {
         return $operator->website_id === $website->id;
+    }
+
+    public static function isOwnerOperator(Operator $operator, Website $website): bool
+    {
+        return $operator->user_id === $website->owner_id;
     }
 }

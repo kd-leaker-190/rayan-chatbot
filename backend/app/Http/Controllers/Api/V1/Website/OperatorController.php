@@ -8,6 +8,7 @@ use App\Http\Resources\OperatorResource;
 use App\Models\Operator;
 use App\Models\Role;
 use App\Models\Website;
+use App\Policies\OperatorPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -21,14 +22,20 @@ class OperatorController extends Controller
     {
         $this->authorize('viewAny', [Operator::class, $website]);
 
-        $operators = $website->operators()
+        $query = $website->operators()
             ->with(['role', 'user'])
-            ->latest()
+            ->latest();
+
+        if (!OperatorPolicy::isOwner(auth()->user(), $website)) {
+            $query->where('user_id', '!=', $website->owner_id);
+        }
+
+        $operators = $query
             ->paginate(10)
             ->withQueryString();
 
         return ApiResponse::success(
-            data: OperatorResource::collection($operators),
+            data: OperatorResource::collection($operators)->response()->getData(true),
         );
     }
 

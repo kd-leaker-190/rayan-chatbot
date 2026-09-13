@@ -1,4 +1,5 @@
 interface IOperator {
+  id: string
   user: IUser
   website: IWebsite
   role: IRole
