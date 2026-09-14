@@ -19,21 +19,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
+
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@/components/ui/button"
 
-interface IProps {
-  openDialog?: boolean
-}
 
-export default function CreateWebsiteDialog({ openDialog }: IProps) {
+export default function CreateWebsiteDialog() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const { mutate } = useWebsites()
@@ -69,7 +68,7 @@ export default function CreateWebsiteDialog({ openDialog }: IProps) {
   }
 
   return (
-    <Dialog open={isDialogOpen || openDialog} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
         render={
           <Button size="lg" className="mt-2">
@@ -81,6 +80,7 @@ export default function CreateWebsiteDialog({ openDialog }: IProps) {
       <DialogContent className="sm:max-w-106.25 [&>button]:right-auto [&>button]:left-4">
         <DialogHeader>
           <DialogTitle>ایجاد وب‌سایت جدید</DialogTitle>
+
           <DialogDescription>
             مشخصات وب‌سایت خود را وارد کنید تا راه‌اندازی اولیه انجام شود.
           </DialogDescription>
@@ -129,21 +129,20 @@ export default function CreateWebsiteDialog({ openDialog }: IProps) {
             <Button
               variant="outline"
               type="button"
-              onClick={() => setIsDialogOpen(false)}
+              onClick={() => {
+                reset()
+                setIsDialogOpen(false)
+              }}
               className="py-4"
             >
               انصراف
             </Button>
 
             <Button disabled={isSubmitting} type="submit" className="py-4">
-              {isSubmitting ? (
-                <span className="flex items-center gap-2">
-                  ایجاد وب‌سایت
-                  <Spinner />
-                </span>
-              ) : (
-                <span className="flex items-center gap-2">ایجاد وب‌سایت</span>
-              )}
+              <span className="flex items-center gap-2">
+                ایجاد وب‌سایت
+                {isSubmitting && <Spinner />}
+              </span>
             </Button>
           </div>
         </form>

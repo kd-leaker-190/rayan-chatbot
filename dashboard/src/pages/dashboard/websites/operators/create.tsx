@@ -4,12 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 
 import { api, handleApiError } from "@/lib/api"
-import { usePermissions } from "@/hooks/use-roles"
 import { useWebsite } from "@/hooks/use-website"
 
-import { createRoleSchema, type CreateRoleSchema } from "@/schemas/roles"
+import {
+  createOperatorSchema,
+  type CreateOperatorSchema,
+} from "@/schemas/operator"
 
-import { ArrowRight, Save, ShieldCheck, Text } from "lucide-react"
+import { ArrowRight, Mail, ShieldCheck } from "lucide-react"
 
 import {
   Card,
@@ -24,39 +26,56 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Spinner } from "@/components/ui/spinner"
 import { Separator } from "@/components/ui/separator"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Field, FieldLabel } from "@/components/ui/field"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { useRoleOptions } from "@/hooks/use-roles"
 
 export default function CreateWebsiteOperatorPage() {
   const { id: websiteId } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  const { permissions } = usePermissions()
   const { website } = useWebsite(websiteId)
+  const { roles } = useRoleOptions(websiteId)
+
+  const mappedRoles: { label: string; value: number }[] = []
+
+  roles.forEach((role) => {
+    mappedRoles.push({ label: role.name, value: role.id })
+  })
 
   const {
     handleSubmit,
     formState: { isSubmitting, errors, isDirty },
     register,
     setError,
-    control,
     reset,
-  } = useForm<CreateRoleSchema>({
+    control,
+  } = useForm<CreateOperatorSchema>({
     mode: "onChange",
-    resolver: zodResolver(createRoleSchema),
+    resolver: zodResolver(createOperatorSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      permission_ids: [],
+      first_name: "",
+      last_name: "",
+      email: "",
+      role_id: undefined,
     },
   })
 
-  const onSubmit = async (data: CreateRoleSchema) => {
+  const onSubmit = async (data: CreateOperatorSchema) => {
     try {
-      const res = await api.post(`/websites/${websiteId}/roles`, data)
+      const res = await api.post(
+        `/websites/${websiteId}/operator-invitations/send`,
+        data
+      )
       toast.success(res.data.message || "نقش موردنظر شما با موفقیت ایجاد شد.")
       reset()
-      navigate(`/dashboard/websites/${websiteId}/roles`)
+      navigate(`/dashboard/websites/${websiteId}/operators`)
     } catch (error) {
       handleApiError(error, setError)
     }
@@ -80,7 +99,7 @@ export default function CreateWebsiteOperatorPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold tracking-tight">
-                ایجاد دسترسی جدید
+                دعوت اوپراتور جدید
               </h1>
             </div>
 
@@ -102,12 +121,12 @@ export default function CreateWebsiteOperatorPage() {
 
             <div>
               <CardTitle className="text-base font-semibold">
-                اطلاعات دسترسی
+                اطلاعات اوپراتور
               </CardTitle>
 
               <CardDescription className="mt-1 text-xs leading-relaxed">
-                نام دسترسی موردنظر را به همراه یک توضیح مختصر (اختیاری) وارد
-                کنید و در ادامه دسترسی های موردنیاز به داشبورد را انتخاب کنید.
+                اطلاعات اولیه برای ارسال ایمیل به اوپراتور را واردکنید، اوپراتور
+                بعد از مشاهده ایمیل و تایید آن به وبسایت شما ملحق خواهد شد.
               </CardDescription>
             </div>
           </div>
@@ -116,97 +135,114 @@ export default function CreateWebsiteOperatorPage() {
         <CardContent className="space-y-6 pt-2">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            id="update-website"
+            id="send-operator-invitation-link"
             className="space-y-6"
           >
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-xs font-medium">
-                  نام دسترسی <span className="text-destructive">*</span>
+                <Label htmlFor="first_name" className="text-xs font-medium">
+                  نام اوپراتور <span className="text-destructive">*</span>
                 </Label>
 
-                <div className="relative">
-                  <ShieldCheck className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    {...register("name")}
-                    id="name"
-                    type="text"
-                    placeholder="مدیریت وبسایت‌ها"
-                    className="pr-9"
-                  />
-                </div>
+                <Input
+                  {...register("first_name")}
+                  id="first_name"
+                  type="text"
+                  placeholder="شکیب"
+                />
 
-                {errors.name && (
+                {errors.first_name && (
                   <p className="text-xs text-destructive">
-                    {errors.name.message}
+                    {errors.first_name.message}
                   </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description" className="text-xs font-medium">
-                  توضیح دسترسی (اختیاری)
+                <Label htmlFor="last_name" className="text-xs font-medium">
+                  نام خانوادگی اوپراتور{" "}
+                  <span className="text-destructive">*</span>
                 </Label>
 
-                <div className="relative">
-                  <Text className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    {...register("description")}
-                    id="description"
-                    type="text"
-                    placeholder="اجازه دسترسی به بخش وبسایت‌ها"
-                    className="pr-9"
-                  />
-                </div>
+                <Input
+                  {...register("last_name")}
+                  id="last_name"
+                  type="text"
+                  placeholder="زیدی"
+                />
 
-                {errors.description && (
+                {errors.last_name && (
                   <p className="text-xs text-destructive">
-                    {errors.description.message}
+                    {errors.last_name.message}
                   </p>
                 )}
               </div>
-            </div>
 
-            <Separator />
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-xs font-medium">
+                  ایمیل دعوت{" "}
+                  <span className="text-destructive">*</span>
+                </Label>
 
-            <div className="grid grid-cols-1 items-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {permissions.map((permission) => (
-                <Field
-                  orientation="horizontal"
-                  key={permission.id}
-                  className="flex min-w-0 cursor-pointer items-center gap-2.5"
-                >
-                  <Controller
-                    control={control}
-                    name="permission_ids"
-                    render={({ field }) => (
-                      <Checkbox
-                        id={`permission-${permission.id}`}
-                        checked={field.value?.includes(permission.id)}
-                        onCheckedChange={(checked) => {
-                          const current = field.value || []
-                          if (checked) {
-                            field.onChange([...current, permission.id])
-                          } else {
-                            field.onChange(
-                              current.filter(
-                                (id: number) => id !== permission.id
-                              )
-                            )
-                          }
-                        }}
-                      />
-                    )}
-                  />
-                  <FieldLabel
-                    htmlFor={`permission-${permission.id}`}
-                    className="cursor-pointer truncate text-xs font-normal select-none"
-                    title={permission.name}
-                  >
-                    {permission.name}
-                  </FieldLabel>
-                </Field>
-              ))}
+                <Input
+                  {...register("email")}
+                  id="email"
+                  type="email"
+                  placeholder="shakib@gmail.com"
+                />
+
+                {errors.email && (
+                  <p className="text-xs text-destructive">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="role_id" className="text-xs font-medium">
+                  نقش اوپراتور <span className="text-destructive">*</span>
+                </Label>
+
+                <Controller
+                  name="role_id"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={
+                        field.value !== undefined ? String(field.value) : ""
+                      }
+                      onValueChange={(value) => field.onChange(Number(value))}
+                      items={mappedRoles.map((item) => ({
+                        label: item.label,
+                        value: String(item.value),
+                      }))}
+                    >
+                      <SelectTrigger id="role_id" className="w-full">
+                        <SelectValue placeholder="یک نقش برای اوپراتور انتخاب کنید." />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        <SelectGroup>
+                          {mappedRoles.map((item) => (
+                            <SelectItem
+                              key={item.value}
+                              value={String(item.value)}
+                            >
+                              {item.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+
+                {errors.role_id && (
+                  <p className="text-xs text-destructive">
+                    {errors.role_id.message}
+                  </p>
+                )}
+              </div>
             </div>
           </form>
         </CardContent>
@@ -216,7 +252,9 @@ export default function CreateWebsiteOperatorPage() {
             type="button"
             variant="ghost"
             size="lg"
-            onClick={() => navigate(`/dashboard/websites/${websiteId}/operators`)}
+            onClick={() =>
+              navigate(`/dashboard/websites/${websiteId}/operators`)
+            }
             disabled={isSubmitting}
           >
             انصراف
@@ -224,19 +262,19 @@ export default function CreateWebsiteOperatorPage() {
 
           <Button
             type="submit"
-            form="update-website"
+            form="send-operator-invitation-link"
             size="lg"
             disabled={isSubmitting || !isDirty}
           >
             {isSubmitting ? (
               <>
                 <Spinner className="h-4 w-4" />
-                <span>ذخیره اطلاعات</span>
+                <span>ارسال ایمیل دعوت</span>
               </>
             ) : (
               <>
-                <Save className="h-4 w-4" />
-                <span>ذخیره تغییرات</span>
+                <Mail className="h-4 w-4" />
+                <span>ارسال ایمیل دعوت</span>
               </>
             )}
           </Button>
