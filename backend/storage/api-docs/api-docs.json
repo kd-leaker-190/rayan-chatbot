@@ -30,6 +30,78 @@
         }
     ],
     "paths": {
+        "/api/v1/websites/{website}/operator-invitations/send": {
+            "post": {
+                "tags": [
+                    "OperatorInvitation"
+                ],
+                "summary": "Send invitation email to user",
+                "description": "Store and send invitation email to user",
+                "operationId": "e4a8468b586dfeba65ac945aeeafa39b",
+                "parameters": [
+                    {
+                        "name": "website",
+                        "in": "path",
+                        "description": "Website ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "OperatorInvitation object that needs to be stored",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "role_id",
+                                    "first_name",
+                                    "last_name",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "role_id": {
+                                        "type": "string",
+                                        "example": 1
+                                    },
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "email": {
+                                        "type": "email",
+                                        "example": "john@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation - Record created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OperatorInvitationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
         "/api/v1/permissions": {
             "get": {
                 "tags": [
@@ -1003,6 +1075,21 @@
                     }
                 ]
             },
+            "OperatorInvitationResponse": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/OperatorInvitation"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "PermissionResponse": {
                 "allOf": [
                     {
@@ -1088,6 +1175,61 @@
                     "data": {
                         "type": "object",
                         "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "OperatorInvitation": {
+                "title": "OperatorInvitation",
+                "description": "OperatorInvitation model",
+                "required": [
+                    "role_id",
+                    "first_name",
+                    "last_name",
+                    "email"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "website_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "invited_by_user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "accepted_by_user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "example": "John"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Doe"
+                    },
+                    "email": {
+                        "type": "email",
+                        "example": "john@example.com"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "active"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-08-26 9:17:20"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-08-26 9:17:20"
                     }
                 },
                 "type": "object"
@@ -1268,6 +1410,10 @@
         }
     },
     "tags": [
+        {
+            "name": "OperatorInvitation",
+            "description": "OperatorInvitation"
+        },
         {
             "name": "Permission",
             "description": "Permission"
